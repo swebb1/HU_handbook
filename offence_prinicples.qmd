@@ -1,0 +1,328 @@
+---
+title: "Offence"
+---
+
+```{r,setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggulti)
+library(tidyverse)
+library(patchwork)
+library(gganimate)
+
+hu_pal <- c("#134072", "#036d3f", "#edb945", "#d63c3c", "#6d6e6d")
+
+pitch <- ggpitch(type = "full", endzone_fill = hu_pal[3],colour = hu_pal[5])
+
+pitch_a <- ggpitch(type = "half_attack", endzone_fill = hu_pal[5],colour = hu_pal[5])
+
+pitch_d <- ggpitch(type = "half_defend", endzone_fill = hu_pal[5],colour = hu_pal[5])
+
+ggulti_plot_values$obj_cols["Offense"] <- hu_pal[1]
+ggulti_plot_values$obj_cols["Defense"] <- hu_pal[2]
+ggulti_plot_values$obj_sizes["Disc"] <- 3
+
+ppv <- ggulti_plot_values
+
+```
+
+## Philosophy 
+
+Hillhead’s offence is built on disciplined possession and positive, attacking play that prioritises moving the disc into valuable spaces on the field. Isolated cutters create opportunities for big gains and break-side continuation. This is complemented by handler-driven flow that keeps the disc moving to stretch the defence and open up new attacking angles. This strategy emphasises intelligent movement, anticipation of play and strong communication, ensuring the disc stays safely in motion until a high-value opening presents itself.
+
+## Structure and spacing
+
+#### Identify active spaces
+
+**Active spaces** are the areas on the field where we typically look to make low risk, positive passes. Often, but not always, in this order of preference:
+
+- <span style="color: #464FB1;">Deep space:</span> To score
+- <span style="color: #008293;">Break space:</span> To open up break-side continuation
+- <span style="color: #D15609;">Throwing lane:</span> Easy up-field pass
+- <span style="color: #DB127A;">Swing space:</span> To open up bigger active spaces
+
+```{r, structure}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(5),
+  y = c(21), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "Reset", x = c(20),
+  y = c(23), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "CH", x = c(35),
+  y = c(31), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "A", x = c(5,14,14),
+  y = c(44,41,80), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "B", x = c(16,15,5),
+  y = c(44,70,50), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "C", x = c(35), frame = 1:3,
+  y = c(42), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:3,
+  y = c(46), show = F, alpha = 1,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),alpha = 1,show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(3),alpha = 1,show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(-1.5),alpha = 1,show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),alpha = 1,show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5),alpha = 1,show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(-1.5),alpha = 1,show = F),
+                defender(players[[7]], xjust = c(-2.5), yjust = c(-1.5),alpha = 1,show = F)
+)
+
+arrows = ggulti::object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+
+base <- list(
+    geom_rect(aes(xmin=8, xmax=20, ymin=28, ymax=48), fill="#008293", alpha=0.4),
+    geom_rect(aes(xmin=0, xmax=10, ymin=22, ymax=70), fill="#D15609", alpha=0.4),
+  geom_rect(aes(xmin=3, xmax=29, ymin=9, ymax=21), fill="#DB127A", alpha=0.4),
+  geom_rect(aes(xmin=0, xmax=30, ymin=74, ymax=100), fill="#464FB1", alpha=0.4),
+  geom_text(aes(x=16, y=15, label="Swing Space"), color="#DB127A", size=3),
+  geom_text(aes(x=5, y=33, label="Throwing\nLane"), color="#D15609", size=3),
+  geom_text(aes(x=14, y=38, label="Break Space"), color="#008293", size=3),
+  geom_text(aes(x=15, y=87, label="Deep Space"), color="#464FB1", size=3)
+)
+
+plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5)
+
+```
+
+#### Isolate active cutters
+
+Ideally, we want 1 or 2 active cutters in front of the disc, attacking the up-field active spaces. Other players on the field should give them space and time to cut. 
+
+#### Isolate the reset handler
+
+The reset handler provides support when there are no up-field options. They offer positive up-field cuts or a route to move the disc laterally through the swing space. Other players should not encroach on the reset or cut into their space. Give them room a swing pass or to cut up the line. 
+
+#### Continuation cutters / handlers
+
+Continuation cutters and handlers should stay out of active spaces. Their job is to create space while anticipating their turn to become active when the disc moves or an active player clears out. You need to be disciplined in creating space and trust the active players to do their job.
+
+You also need to look like a threat. If you are too static then your defender will be able to poach the active spaces. Keep moving, put in a few fake cuts, and be ready to attack if an opportunity arises.
+
+#### **Keep the active spaces clear**
+
+- Leave space to throw into
+- Leave space for active cutters to attack
+- Active cutters cannot hang around in attacking spaces - clear quickly!
+
+## Cutting and movement
+
+#### **Active cutters**
+
+Active cutters are the players in front of the disc trying to make big up-field gains. When you are active, you need to cut aggressively and avoid clogging the active spaces.
+
+Use big cutting shapes that maximise gains and make it obvious to the thrower which spaces you are attacking. You can still change speed and direction to lose your mark but avoid dancing  when attacking active space. Actively engage with the thrower via vocal communication, pointing, eye contact etc. The three cutting shapes we use the most are outlined below.
+
+#### Going deep
+
+Always cut to score if the throw is on. Your defender has to respect this, even if you don’t get the disc it may open up a big space to cut under.
+
+- Start from **shallow** to allow the disc to be thrown into space
+- Stay **wide** of the throwing lane when cutting
+  - Keep the lane clear for throws
+  - Allows you to see the disc in flight
+  - Adjust when the disc is in flight
+- Clear or cut under if you don’t get the disc
+
+```{r, deep}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(5),
+  y = c(21), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "Reset", x = c(20),
+  y = c(23), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "CH", x = c(35),
+  y = c(31), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "A", x = c(5,12),
+  y = c(44,41), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "B", x = c(16,15),
+  y = c(44,70), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(35), frame = 1:2,
+  y = c(42), show = F, alpha = 0.2,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:2,
+  y = c(46), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(3),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[7]], xjust = c(-2.5), yjust = c(-1.5),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+
+plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5)
+
+```
+
+
+#### Coming under
+
+If you threaten deep, you will find that space opens up for you underneath. Aim for big gains and clear early if the throw isn’t on.  
+
+- Cut under at a **45 degree** angle to the throwing lane
+  - Larger margin of error on the throw
+  - Better continuation options after a catch
+  - Less time spent clogging the throwing lane
+- **Clear the lane early** if you don’t get the disc
+  - Small gains on the open side are not very valuable*
+  - Clear space for the next cut
+  
+*Unless it’s a high stall or the only option to get the disc moving.
+
+
+```{r, under}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(5),
+  y = c(21), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "Reset", x = c(20),
+  y = c(23), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "CH", x = c(35),
+  y = c(31), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "A", x = c(15,15),
+  y = c(41,50), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "B", x = c(15,3),
+  y = c(60,41), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(35), frame = 1:2,
+  y = c(42), show = F, alpha = 0.2,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:2,
+  y = c(46), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(3),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[7]], xjust = c(-2.5), yjust = c(-1.5),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+
+
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Sideline") +
+  theme(plot.title = element_text(size = 10))
+
+
+## central
+players <- list(
+  pitch_object(label = "H1", x = c(15),
+  y = c(15), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "H2", x = c(18.5),
+  y = c(23), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "H3", x = c(35),
+  y = c(23), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "A", x = c(2),
+  y = c(41), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "B", x = c(8),
+  y = c(41), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "C", x = c(29,16), frame = 1:2,
+  y = c(60,42), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:2,
+  y = c(41), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[4]], xjust = c(1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[7]], xjust = c(-1.5), yjust = c(1),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+
+
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Central") +
+  theme(plot.title = element_text(size = 10))
+
+p1 + p2 + plot_layout(guides = "collect")
+
+```
+
+
+#### Slash to the breakside
+
+The slash cut is a powerful move that can open up the break-side and create opportunities for easy continuation passes. 
+
+- Make a lateral cut across the throwing lane to the break side
+- Start wide to create a big throwing window
+- Clear to the inactive side or attack deep if you don’t get the disc
+
+You can link an under cut into a slash cut. Finish your under cut wide on the open side to create a big throwing window for the slash cut.
+
+#### Putting it all together
+
+Linking cuts,
+timing with partner
+Many cutting options but 3 above are powerful
+
+#### **Setting up a cut**
+
+Good cutting isn’t just about speed and effort, it also requires good positioning, timing and intention. The best cutters don’t just run into open space, they create that space first. This preparatory movement is what we refer to as setting up. 
+
+A good set up allows you to: 
+
+  - Get separation from your defender
+  - Launch your attack from a strong position (think about your ideal launch point for the cuts above)
+  - Launch your attack at the right time
+  
+
+  

@@ -1,0 +1,124 @@
+
+/*-- scss:defaults --*/
+
+// Import Flatly theme first
+// @import "https://cdn.jsdelivr.net/npm/bootswatch@5/dist/flatly/bootstrap.min.css";
+@import "https://fonts.googleapis.com/css?family=Oswald";
+
+// Override Bootstrap variables
+$success: #32B0F8;
+//$font-family-sans-serif	: 'Iceland', sans-serif;
+// set background colour of website
+$body-bg: white;
+
+/*-- scss:rules --*/
+
+// Optionally add more custom styles here
+
+b, strong {
+    color: #134072; /* Replace with your desired color */
+}
+
+.bold-green {
+  font-weight: bold;
+  color: #036d3f;
+}
+
+h2 {
+  color: #134072;
+}
+
+h1, h3 {
+  color: #036d3f;
+}
+
+h3.red {
+  color: #d63c3c;
+}
+
+h3.yellow {
+  color: #edb945;
+}
+
+.navbar{
+  font-size: 1.2em;
+  justify-content: left;
+  align-items: left;
+  background-color: #143960;
+}
+
+@font-face {
+  font-family: 'Hillhouse';
+  src: url('styles/fonts/HillHouse.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.navbar-brand {
+    font-family: 'HillHouse', sans-serif;
+    display: flex;
+    align-items: left;
+    justify-content: left;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.navbar-logo {
+  max-height: 3em;
+  margin: 0.3em;
+}
+
+
+.rules {
+  padding: 1em;
+  padding-top: 0.1em;
+  border: 2px solid #FFD166;  /* Outline color */
+  border-radius: 8px;         /* Optional rounded corners */
+  margin: 20px;
+  position: relative;
+}
+
+.homework {
+  padding: 1em;
+  padding-top: 0.1em;
+  border: 2px solid #06D6A0;  /* Outline color */
+  border-radius: 8px;         /* Optional rounded corners */
+  margin: 20px;
+  position: relative;
+}
+
+.key-points {
+  padding: 0.5em;
+  background: #EF476F;
+  color: white;
+  border: 1px;
+  border-radius: 1px;
+  b, strong {
+    color: white;
+  }
+  a { color: white; }
+}
+
+.discussion {
+  padding: 1em;
+  background: #073B4C;
+  color: white;
+  border: 2px;
+  border-radius: 2px;
+  b, strong {
+    color: white;
+  }
+  a { color: white; }
+}
+
+.challenge {
+  padding: 1em;
+  background: #118AB2;
+  color: white;
+  border: 2px;
+  border-radius: 2px;
+  b, strong {
+    color: white;
+  }
+  a { color: white; }
+}

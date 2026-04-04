@@ -1,0 +1,486 @@
+---
+title: "Defence"
+---
+
+```{r,setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggulti)
+library(tidyverse)
+library(patchwork)
+library(gganimate)
+
+pitch <- ggpitch(type = "full",xmax = 25,ymax = 75, zone_depth = 15,endzone_fill = "#CBBD93",colour = "#CBBD93")
+pitch_a <- ggpitch(type = "half_attack",xmax = 25,ymax = 75,ymin = 37.5, zone_depth = 15,endzone_fill = "#CBBD93",colour = "#CBBD93")
+pitch_d <- ggpitch(type = "half_defend",xmax = 25,ymax = 37.5, zone_depth = 15,endzone_fill = "#CBBD93",colour = "#CBBD93")
+
+cols <- c("#0E3574",
+          "#071135",
+          "#0AE65",
+          "#B23850",
+          "#CF3452",
+          "#C6282C",
+          "#7C0205")
+
+ggulti_plot_values$obj_cols["Offense"] <- cols[1]
+ggulti_plot_values$obj_cols["Defense"] <- cols[4]
+ggulti_plot_values$obj_sizes["Disc"] <- 3
+
+ppv <- ggulti_plot_values
+
+```
+
+# Defence Principles
+
+Our aim is to generate turnovers by **containing** the offence and applying **pressure** at the right moments.
+
+**Contain**
+
+  - Stifle pull plays
+  - Stop forward passes and quick continuation
+  - Push the offence into difficult areas
+
+**Pressure**
+
+  - Actively hold forces
+  - Lock in on your mark in attacking areas and when the stall count is high
+  - Force difficult throws
+
+**Team Defence**
+
+  - Use team defence to create opportunities for blocks
+  - Poach, flash, surround, switch, cover
+  - [Beyond 1v1 Defence](https://docs.google.com/presentation/d/1hw6NooF2g1Ytzt3lqTJ8eEKTHo-cnbzZglA69JF5lb4/edit?usp=sharing)
+
+# Defense Strategies
+
+## Forces
+
+### Sideline
+
+- Call a sideline to force towards
+- Move the offence towards that sideline (contain)
+- Aim to get blocks on that sideline (pressure)
+
+### Middle
+
+- Stifle offensive flow by stopping continuation throws (contain)
+- Force throws into traffic in the centre of the field (pressure)
+- The force will change as the disc swings across the centre line
+  - Call the force each time
+  - Sideline repeat the call
+- Transition to a sideline force after halfway
+  - Generally the opposite side the disc is on
+  - Sideline repeat the call
+
+### Adjustments
+
+Expect adjustments to be called on line e.g.
+
+- Straight up for the first 3 passes to stop hucks
+- Put more pressure on the IOs to stop early inside breaks
+
+## Marking strategies
+
+We will use two calls to indicate how upfield defenders should set up.
+
+*Protect* will be our default marking strategy. *Push* will be used in specific situations to create block opportunities or to move the offence to a specific sideline.
+
+As the possession progresses we trust players to use their own judgement in 1v1 situations. 
+
+- Win matchups athletically
+- Take away the biggest threats
+- Decide when to go for blocks
+
+### Protect
+
+The aim of protect is to stop easy completions and force the offence to work hard for each pass. 
+
+- Active cutters: Protect the open-under space
+- Inactive cutters: Be ready to offer deep help 
+- Reset: Stay tight to the reset, flush them upfield
+
+```{r, protect}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "H1", x = c(5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "H2", x = c(12.5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "A", x = c(7),
+  y = c(44), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "B", x = c(13),
+  y = c(38), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(20), frame = 1:2,
+  y = c(38), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),alpha = 1,show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(0),alpha = 1,show = F),
+                defender(players[[3]], xjust = c(-1), yjust = c(-2),alpha = 1,show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),alpha = 1,show = F),
+                defender(players[[5]],label="D5", xjust = c(-1.5,-5), yjust = c(4,13),alpha = 1,show = F)
+)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 18.5,show = F,alpha = 1))
+
+arrows = object_paths(defense,objects = "Defense")
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T,static_frame = 1) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  geom_polygon(aes(x = c(1,7,7,1), y = c(21,21,37,37)), fill = "#D15609", alpha = 0.4) +
+  geom_text(aes(x = 4, y = 29), label = "Protect", size = 3, color = "#D15609") + 
+  geom_text(aes(x = 20, y = 50), label = "Deep help", size = 3, color = "#B23850") +
+  geom_text(aes(x = 11, y = 20), label = "Tight", size = 3, color = "#B23850") +
+  ggtitle("Sideline - Protect")
+
+players <- list(
+  pitch_object(label = "H1", x = c(5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "H2", x = c(16.5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "A", x = c(4),
+  y = c(44), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "B", x = c(18),
+  y = c(38), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(24), frame = 1:2,
+  y = c(38), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(-1), yjust = c(2),alpha = 1,show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(0),alpha = 1,show = F),
+                defender(players[[3]], xjust = c(1), yjust = c(-3),alpha = 1,show = F),
+                defender(players[[4]], xjust = c(-1), yjust = c(-3),alpha = 1,show = F),
+                defender(players[[5]],label="D5", xjust = c(-1.5,-3), yjust = c(4,10),alpha = 1,show = F)
+)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 6,y = 18.5,show = F,alpha = 1))
+
+arrows = object_paths(defense,objects = "Defense")
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T,static_frame = 1) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  geom_polygon(aes(x = c(5,17,17,5), y = c(21,21,37,37)), fill = "#D15609", alpha = 0.4) +
+  geom_text(aes(x = 11, y = 29), label = "Protect", size = 3, color = "#D15609") + 
+  geom_text(aes(x = 20, y = 50), label = "Deep help", size = 3, color = "#B23850") +
+  geom_text(aes(x = 15, y = 20), label = "Tight", size = 3, color = "#B23850") +
+  ggtitle("Middle - Protect")
+
+p1 + p2 + plot_layout(guides = "collect")
+
+```
+
+### Push
+
+With push, we want to funnel cutters into areas where we can get blocks. We will only use push in the opponents half of the field. We are happy to give up very short gains on the open side in order to create block opportunities.
+
+- Active cutters: Push your mark towards the open-under space. Be tight enough to apply pressure on high speed catches.
+- Inactive cutters: Anticipate play and be ready to offer help where required
+- Reset: Poach/flash to cut off upfield throwing lanes or to encourage lateral passes.
+
+```{r, push}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "H1", x = c(5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "H2", x = c(12.5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "A", x = c(7,6),
+  y = c(44,38), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "B", x = c(13,12),
+  y = c(38,36), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(20), frame = 1:2,
+  y = c(38), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(1), yjust = c(0),alpha = 1,show = F),
+                defender(players[[2]], xjust = c(-1.5,-3), yjust = c(3,6),alpha = 1,show = F),
+                defender(players[[3]], xjust = c(-1), yjust = c(2),alpha = 1,show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(1.5),alpha = 1,show = F),
+                defender(players[[5]],label="D5", xjust = c(-1.5,-5), yjust = c(4,13),alpha = 1,show = F)
+)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 18,show = F,alpha = 1))
+
+arrows = object_paths(players)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T,static_frame = 1) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  geom_polygon(aes(x = c(1,7,7,1), y = c(21,21,37,37)), fill = "#464FB1", alpha = 0.4) +
+  geom_text(aes(x = 4, y = 29), label = "Push", size = 3, color = "#464FB1") + 
+  geom_text(aes(x = 20, y = 50), label = "Deep help", size = 3, color = "#B23850") +
+  geom_text(aes(x = 11, y = 25), label = "No line / Flash", size = 3, color = "#B23850") +
+  ggtitle("Sideline - Push")
+
+players <- list(
+  pitch_object(label = "H1", x = c(5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "H2", x = c(16.5),
+  y = c(16), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "A", x = c(4),
+  y = c(44), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "B", x = c(18),
+  y = c(38), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(24), frame = 1:2,
+  y = c(38), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(-1), yjust = c(2),alpha = 1,show = F),
+                defender(players[[2]], xjust = c(-4), yjust = c(4),alpha = 1,show = F),
+                defender(players[[3]], xjust = c(0.5), yjust = c(2),alpha = 1,show = F),
+                defender(players[[4]], xjust = c(-0.5), yjust = c(2),alpha = 1,show = F),
+                defender(players[[5]],label="D5", xjust = c(-1.5), yjust = c(2),alpha = 1,show = F)
+)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 6,y = 18.5,show = F,alpha = 1))
+
+arrows = object_paths(defense,objects = "Defense")
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T,static_frame = 1) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  geom_polygon(aes(x = c(5,17,17,5), y = c(21,21,37,37)), fill = "#464FB1", alpha = 0.4) +
+  geom_text(aes(x = 11, y = 29), label = "Push", size = 3, color = "#464FB1") + 
+  geom_text(aes(x = 12.5, y = 17), label = "Poach", size = 3, color = "#B23850") +
+  ggtitle("Middle - Push")
+
+p1 + p2
+
+```
+
+### Adjustments
+
+Expect adjustments to be called on the line e.g
+
+- Handler marks sag in lanes
+- Set up a bracket to give us deep help
+- Push #23 under, everyone else protect
+
+### Push and protect
+
+We may also call a combination of push and protect on the same play. E.g. We can use *push* to encourage a team to move the disc to a sideline. From there we can use *protect* to try to trap them.
+
+```{r, pp}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "H1", x = c(10),
+  y = c(16), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "H2", x = c(20),
+  y = c(16), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "A", x = c(7,7,3),
+  y = c(44,44,25), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "B", x = c(13),
+  y = c(38), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "C", x = c(20), frame = 1:3,
+  y = c(38), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(7,1,1), yjust = c(5,1,1),alpha = 1,show = F),
+                defender(players[[2]], xjust = c(1), yjust = c(1.5),alpha = 1,show = F),
+                defender(players[[3]], xjust = c(-1,-1,1), yjust = c(2,2,1),alpha = 1,show = F),
+                defender(players[[4]], xjust = c(-1.5,-1.5,-2.5), yjust = c(1.5,1.5,-1),alpha = 1,show = F),
+                defender(players[[5]],label="D5", xjust = c(-1.5), yjust = c(1),alpha = 1,show = F)
+)
+
+throws <- list(throw(object_list = players,label = "t1",from = "H2",to = "H1",arrow_shape = "bhrc",throw_frame = 1,frame=1),
+               throw(object_list = players,label = "t2",from = "H1",to = "A",arrow_shape = "bhrc",throw_frame = 3,frame=2:4))
+
+discs <- list(disc(throws[[1]],"disA",frame = 1,release_frame = 2, yjust = c(1)),
+        disc(throws[[2]],"disB",frame = 2:3,release_frame = 3, yjust = c(1,-2))
+)
+
+cuts = object_paths(c(players,defense),objects = c("Offense","Defense"))
+arrows = list(cuts,throws)
+
+objects <- list(players,defense,discs)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = F,static_frame = 1) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  geom_polygon(aes(x = c(1,12.5,12.5,1), y = c(21,21,37,37)), fill = "#464FB1", alpha = 0.4) +
+  geom_text(aes(x = 4, y = 29), label = "Push", size = 3, color = "#464FB1") + 
+  ggtitle("Sideline - Push") +
+  theme(legend.position = "none")
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = F,static_frame = 2) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  geom_polygon(aes(x = c(1,7,7,1), y = c(21,21,37,37)), fill = "#464FB1", alpha = 0.4) +
+  geom_text(aes(x = 4, y = 29), label = "Push", size = 3, color = "#464FB1") + 
+  ggtitle("Sideline - Push") +
+  theme(legend.position = "none")
+
+p3 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = F,static_frame = 3) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  geom_polygon(aes(x = c(1,7,7,1), y = c(28,28,46,46)), fill = "#D15609", alpha = 0.4) +
+  geom_text(aes(x = 4, y = 37), label = "Protect", size = 3, color = "#D15609") + 
+  ggtitle("Sideline - Protect") +
+  theme(legend.position = "none")
+
+p1 + p2 + p3 + plot_layout(guides = "collect")
+
+```
+
+# Chaos
+
+Our alternative to match defense is to use a hybrid, switchy set up that covers deep shots; makes it difficult for the offence to progress the disc; and creates a lot of noise in the open throwing lanes.
+
+## Principles
+
+- Force middle
+- Force the the offense to make a lot of short passes
+  - Allow backwards and sideways throws
+- Take away deep options
+- Create traffic in the main throwing lanes
+  - Flashes and switches
+
+## Positions
+
+- **Deep poach**
+  - Call *switches* with same gender players
+  - *Cover* opposite gender players
+- **Cutter marks**
+  - Protect under
+  - You may find yourself marking 2 players at once
+      - Set up in positions that cover both players
+      - Switch on to the biggest upfield threat
+      - *Hand off* players to deep poach or handler marks to remain in the central space
+- **Handler marks**
+  - Flash in lanes and run switches on handler moves
+
+```{r, deep_poach}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "H1", x = c(5),
+  y = c(16), show = F, alpha = 1, frame = 1),
+  pitch_object(label = "H2", x = c(16.5),
+  y = c(16), show = F, alpha = 1, frame = 1),
+  pitch_object(label = "A", x = c(4),
+  y = c(44), show = F, alpha = 1, frame = 1),
+  pitch_object(label = "B", x = c(18),
+  y = c(38), show = F, alpha = 1, frame = 1),
+  pitch_object(label = "C", x = c(24), frame = 1,
+  y = c(38), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(-1), yjust = c(2),alpha = 1,show = F),
+                defender(players[[2]], xjust = c(-4), yjust = c(4),alpha = 1,show = F),
+                defender(players[[3]], xjust = c(1), yjust = c(-3),alpha = 1,show = F),
+                defender(players[[4]], xjust = c(-3), yjust = c(-4),alpha = 1,show = F),
+                defender(players[[5]],label="D5", xjust = c(-12), yjust = c(10),alpha = 1,show = F)
+)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 6,y = 18.5,show = F,alpha = 1))
+
+plot_play(pitch = pitch,object_list = objects, pv = ppv,default_obj_size = 4,keep_arrows = T,static_frame = 1) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  ggtitle("Chaos")
+
+```
+
+# Zone
+
+We are only likely to use a zone if it is so windy that throws over the top are extremely difficult. In this case we will use a 3-1-1 zone.
+
+- **2 handler marks**
+  - Force the disc back towards the hatchet
+  - Inactive handler mark can help the hatchet
+- **1 hatchet**
+  - Get in the lane and stop forward passes
+- **1 mid**
+  - Stop throws over the front three
+  - Try to block holes in the wall
+- **1 deep**
+  - Stop deep throws
+  - Pinch in to help the mid when possible
+
+```{r, zone}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "H1", x = c(12.5),
+  y = c(18), show = F, alpha = 0.7, frame = 1:2),
+  pitch_object(label = "H2", x = c(15),
+  y = c(15), show = F, alpha = 0.7, frame = 1:2),
+  pitch_object(label = "A", x = c(5),
+  y = c(38), show = F, alpha = 0.7, frame = 1:2),
+  pitch_object(label = "B", x = c(12.5),
+  y = c(38), show = F, alpha = 0.7, frame = 1:2),
+  pitch_object(label = "W", x = c(20), frame = 1:2,
+  y = c(38), show = F, alpha = 0.7)
+)
+
+zone_positions <- c("Handler Mark" = "#008293", "Hatchet" = "#DB127A", "Mid" = "#D15609", "Deep" = "#464FB1")
+ppv$obj_cols <- c(ppv$obj_cols, zone_positions)
+
+zone <- list(
+  pitch_object(label = "HM", show=T, object = "Handler Mark", x=c(11), y=c(20),label_pos = "up"),
+  pitch_object(label = "H", show=T, object = "Hatchet", x=c(14), y=c(25),label_pos = "up"),
+  pitch_object(label = "HM", show=T, object = "Handler Mark", x=c(17), y=c(23),label_pos = "up"),
+  pitch_object(label = "M", show=T, object = "Mid", x=c(14), y=c(36),label_pos = "up"),
+  pitch_object(label = "D", show=T, object = "Deep", x=c(10), y=c(42),label_pos = "up")
+)
+
+objects <- list(players,zone,static_objects(object = "Disc",label="Disc",x = 13.5,y = 18.5,show = F,alpha = 1))
+
+plot_play(pitch = pitch,object_list = objects, pv = ppv,default_obj_size = 4,keep_arrows = T) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  ggtitle("Zone")
+```
+
+The aim of this zone is to force the offence to make a lot of short passes. We are okay with passes that go backwards or laterally as long as we can stop the next pass.
+
+This setup gives us flexibility e.g.
+- Mid and deep can either take mid and deep or a side of the field each
+- Spare handler marks can help the hatchet or block a swing
+
+We won't go into the nuances of this zone as we won't be drilling it. Be prepared to use it in game and make adjustments.
+
+
+![](images/WBUC_logo.png){fig-align="center" width="100px"}

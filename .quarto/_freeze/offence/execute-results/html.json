@@ -1,0 +1,17 @@
+{
+  "hash": "7c10a10e18147ef17572f029b281ad3e",
+  "result": {
+    "engine": "knitr",
+    "markdown": "---\ntitle: \"Offence\"\n---\n\n::: {.cell}\n\n:::\n",
+    "supporting": [
+      "offence_files"
+    ],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}

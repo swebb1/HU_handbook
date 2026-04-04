@@ -1,0 +1,30 @@
+project:
+  type: website
+
+website:
+  favicon: "images/Crest.png"
+  title: "HILLHEAD ULTIMATE"
+  navbar:
+    background: primary
+    logo: "images/Crest.png"
+    collapse: true
+    pinned: true
+    left:
+      - text: "Offence"
+        menu:
+          - href: offence_principles.qmd
+            text: Principles
+      - text: "Defence"
+        menu:
+          - href: defence_principles.qmd
+            text: Principles
+format:
+  html:
+    theme:       
+      - cosmo
+      - styles.scss
+    toc: true
+    link-external-newwindow: true
+
+editor: source
+
