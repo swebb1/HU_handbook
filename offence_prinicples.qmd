@@ -1,5 +1,5 @@
 ---
-title: "Offence"
+title: "Offence Principles"
 ---
 
 ```{r,setup}
@@ -176,13 +176,59 @@ arrows = object_paths(players)
 
 objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
 
-plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
   guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
-  coord_fixed(ratio = 0.5)
+  coord_fixed(ratio = 0.5) + 
+  ggtitle("Break side") +
+  theme(plot.title = element_text(size = 10))
 
+
+### Open side
+
+players <- list(
+  pitch_object(label = "H1", x = c(15),
+  y = c(15), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "H2", x = c(18.5),
+  y = c(23), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "H3", x = c(35),
+  y = c(23), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "A", x = c(2),
+  y = c(41), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "B", x = c(8),
+  y = c(41,60), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(29), frame = 1:2,
+  y = c(41), show = F, alpha = 0.2,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:2,
+  y = c(41), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[4]], xjust = c(1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1), yjust = c(-2.5),show = F),
+                defender(players[[6]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[7]], xjust = c(-1.5), yjust = c(1),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Central") +
+  theme(plot.title = element_text(size = 10))
+
+p1 + p2 + plot_layout(guides = "collect")
 ```
 
 
@@ -190,16 +236,15 @@ plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,def
 
 If you threaten deep, you will find that space opens up for you underneath. Aim for big gains and clear early if the throw isn’t on.  
 
-- Cut under at a **45 degree** angle to the throwing lane
+- Cut under at an **angle** to the throwing lane
   - Larger margin of error on the throw
-  - Better continuation options after a catch
   - Less time spent clogging the throwing lane
+  - Better continuation options after a catch
 - **Clear the lane early** if you don’t get the disc
   - Small gains on the open side are not very valuable*
   - Clear space for the next cut
   
 *Unless it’s a high stall or the only option to get the disc moving.
-
 
 ```{r, under}
 #| echo: false
@@ -247,7 +292,7 @@ p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = p
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
-  labs(title = "Sideline") +
+  labs(title = "Break side") +
   theme(plot.title = element_text(size = 10))
 
 
@@ -297,22 +342,241 @@ p1 + p2 + plot_layout(guides = "collect")
 
 ```
 
-
 #### Slash to the breakside
 
 The slash cut is a powerful move that can open up the break-side and create opportunities for easy continuation passes. 
 
-- Make a lateral cut across the throwing lane to the break side
-- Start wide to create a big throwing window
-- Clear to the inactive side or attack deep if you don’t get the disc
+- Make a **lateral** cut across the throwing lane to the break side
+  - Attack the break-side
+  - Clear the lane for throws to other cuts
+- When possible, start **wide** of the lane, to create a big <span style="color: #008293;">throwing window</span> for the inside throw
+  - The thrower can throw into space
+  - The thrower doesn't need to take on the force
+- **Clear** to the inactive side or attack deep if you don’t get the disc
 
-You can link an under cut into a slash cut. Finish your under cut wide on the open side to create a big throwing window for the slash cut.
 
-#### Putting it all together
+```{r, slash}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
 
-Linking cuts,
-timing with partner
-Many cutting options but 3 above are powerful
+base <- list(
+  geom_rect(aes(xmin=5, xmax=10, ymin=27, ymax=40), fill="#008293", alpha=0.4)
+)
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(5),
+  y = c(21), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "Reset", x = c(20),
+  y = c(23), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "CH", x = c(35),
+  y = c(31), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "A", x = c(5,12),
+  y = c(41,39), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "B", x = c(15),
+  y = c(41,55), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "C", x = c(35), frame = 1:2,
+  y = c(42), show = F, alpha = 0.2,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:2,
+  y = c(46), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(3),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[7]], xjust = c(-2.5), yjust = c(-1.5),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Clearing the lane") +
+  theme(plot.title = element_text(size = 10))
+
+## central
+
+base <- list(
+  geom_rect(aes(xmin=12, xmax=22, ymin=27, ymax=40), fill="#008293", alpha=0.4),
+  geom_text(aes(x=17, y=33.5, label="Throwing\nwindow"), color="#008293", size=3)
+)
+
+players <- list(
+  pitch_object(label = "H1", x = c(15),
+  y = c(15), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "H2", x = c(18.5),
+  y = c(23), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "H3", x = c(35),
+  y = c(23), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "A", x = c(2),
+  y = c(41), show = F, alpha = 0.2, frame = 1:2),
+  pitch_object(label = "B", x = c(10,26),
+  y = c(41), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "C", x = c(29), frame = 1:2,
+  y = c(41,55), show = F, alpha = 0.2,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:2,
+  y = c(41), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[4]], xjust = c(1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[7]], xjust = c(-1.5), yjust = c(1),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Wide of the lane") +
+  theme(plot.title = element_text(size = 10))
+
+p1 + p2 + plot_layout(guides = "collect")
+
+```
+
+You can link an under cut to a slash cut. Finish your under cut **wide** on the open side to create a big <span style="color: #008293;">throwing window</span> for your slash cut.
+
+```{r, slash2}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+## under cut to slash
+
+base <- list(
+  geom_rect(aes(xmin=12, xmax=22, ymin=27, ymax=40), fill="#008293", alpha=0.4),
+  geom_text(aes(x=17, y=33.5, label="Throwing\nwindow"), color="#008293", size=3)
+)
+
+players <- list(
+  pitch_object(label = "H1", x = c(15),
+  y = c(15), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "H2", x = c(18.5),
+  y = c(23), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "H3", x = c(35),
+  y = c(23), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "A", x = c(2),
+  y = c(41), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "B", x = c(28),
+  y = c(50), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "C", x = c(26,12,26), frame = 1:3,
+  y = c(70,41,41), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:3,
+  y = c(41), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[4]], xjust = c(1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[7]], xjust = c(-1.5), yjust = c(1),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Big window") +
+  theme(plot.title = element_text(size = 10))
+
+## under cut to slash small
+
+base <- list(
+  geom_rect(aes(xmin=18, xmax=22, ymin=27, ymax=40), fill="#008293", alpha=0.4)
+)
+
+players <- list(
+  pitch_object(label = "H1", x = c(15),
+  y = c(15), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "H2", x = c(18.5),
+  y = c(23), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "H3", x = c(35),
+  y = c(23), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "A", x = c(2),
+  y = c(41), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "B", x = c(28),
+  y = c(50), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "C", x = c(26,18,26), frame = 1:3,
+  y = c(70,41,41), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:3,
+  y = c(41), show = F, alpha = 0.2,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[4]], xjust = c(1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(1.5),show = F),
+                defender(players[[7]], xjust = c(-1.5), yjust = c(1),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
+  coord_fixed(ratio = 0.5) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Small window") +
+  theme(plot.title = element_text(size = 10))
+
+p2 + p1 + plot_layout(guides = "collect")
+
+```
+
+#### Cutting sequences
+
+The three cutting shapes above are the most common cuts to make as an active cutter. They are not the only cuts you can make, but they are a good starting point for learning how to cut effectively. 
+
+They can also be linked together in a powerful cutting sequence. For example, you can start with deep cut on the break side, come under on an angle to the lane, slash to the break-side, then go deep again. By linking cuts into sequences you give yourself multiple chances to get open for the thrower. Each change of direction is an opportunity to lose your defender, so turn **sharply**, **explosively** and use **misdirection** to your advantage.
+
+Take what defence gives you, find the turning points: 
+
+Some offence structures use multiple active cutters. In this case, you will also need to think about the **timing** of your cutting sequence:
+
+  - Change direction to free up space for your teammates to attack
+  - Delay your change of direction until your teammates have cleared the throwing lane or space you want to attack
 
 #### **Setting up a cut**
 
@@ -324,5 +588,4 @@ A good set up allows you to:
   - Launch your attack from a strong position (think about your ideal launch point for the cuts above)
   - Launch your attack at the right time
   
-
   
