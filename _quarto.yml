@@ -24,6 +24,7 @@ format:
       - cosmo
       - styles.scss
     toc: true
+    toc-depth: 3
     link-external-newwindow: true
 
 editor: source
