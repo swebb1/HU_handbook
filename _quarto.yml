@@ -1,5 +1,6 @@
 project:
   type: website
+  output-dir: docs
 
 website:
   favicon: "images/Crest.png"
@@ -26,4 +27,5 @@ format:
     link-external-newwindow: true
 
 editor: source
+output-dir: docs
 
