@@ -1,11 +1,13 @@
 ---
-title: "HU_Handbook"
+title: "Hillhead Ultimate Playbook"
 ---
 
-This is a Quarto website.
+This playbook is a collection of strategies and best practices for Hillhead Ultimate players. 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+It covers many of the **principles** we use to guide our play, as well as some of the **structures** and **plays** we use in training and in games. 
 
-```{r}
-1 + 1
-```
+We encourage you to read through, ask questions, learn the language and use it at training! 
+
+---------------
+
+Contact the [Hillhead Ultimate](mailto:hillheadultimate@gmail.com) coaching team for more information.

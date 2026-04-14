@@ -1,0 +1,900 @@
+---
+title: "Offence Structures"
+---
+
+```{r,setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggulti)
+library(tidyverse)
+library(patchwork)
+library(gganimate)
+
+hu_pal <- c("#134072", "#036d3f", "#edb945", "#d63c3c", "#6d6e6d")
+spal <- c(bs="#008293",tl="#D15609",sw="#DB127A",de="#464FB1")
+ppal <- c(Cutter = "#2F4858", `Active Cutter` = "#33658A", `Continuation Cutter` = "#86BBD8",
+          Handler = "#6D597A", Reset = "#E56B6F", `Continuation Handler` = "#B56576")
+
+pitch <- ggpitch(type = "full", endzone_fill = hu_pal[3],colour = hu_pal[5])
+
+pitch_a <- ggpitch(type = "half_attack", endzone_fill = hu_pal[3],colour = hu_pal[5])
+
+pitch_d <- ggpitch(type = "half_defend", ymax = 50, endzone_fill = hu_pal[3],colour = hu_pal[5])
+
+ppv <- ggulti_plot_values
+
+ppv$obj_cols["Offense"] <- hu_pal[1]
+ppv$obj_cols["Defense"] <- hu_pal[2]
+ppv$obj_sizes["Disc"] <- 3
+
+ppv$obj_cols["Cutter"] <- ppal[1]
+ppv$obj_cols["Active Cutter"] <- ppal[2]
+ppv$obj_cols["Continuation Cutter"] <- ppal[3]
+ppv$obj_cols["Handler"] <- ppal[4]
+ppv$obj_cols["Reset"] <- ppal[5]
+ppv$obj_cols["Continuation Handler"] <- ppal[6]
+
+ppv2 <- ppv
+
+ppv$obj_sizes["Offense"] <- 3
+ppv$obj_sizes["Defense"] <- 3
+ppv$obj_sizes["Cutter"] <- 3
+ppv$obj_sizes["Active Cutter"] <- 3
+ppv$obj_sizes["Continuation Cutter"] <- 3
+ppv$obj_sizes["Handler"] <- 3
+ppv$obj_sizes["Reset"] <- 3
+ppv$obj_sizes["Continuation Handler"] <- 3
+
+ppv$obj_sizes["Offense"] <- 3.5
+ppv$obj_sizes["Defense"] <- 3.5
+ppv$obj_sizes["Cutter"] <- 3.5
+ppv$obj_sizes["Active Cutter"] <- 3.5
+ppv$obj_sizes["Continuation Cutter"] <- 3.5
+ppv$obj_sizes["Handler"] <- 3.5
+ppv$obj_sizes["Reset"] <- 3.5
+ppv$obj_sizes["Continuation Handler"] <- 3.5
+
+
+
+```
+
+## Horizontal
+
+Horizontal offence sets up with three handlers and four up-field cutters. The advantage of this offence is that it opens up a lot of room deep in the field. To play this offence well, you must have throwers and receivers that can use this space effectively and aggressively. Having four cutters up-field can get very messy so we play a system where only the two players in front of the disc, the *active pair*, cut in unison to attack the active spaces. The *continuation cutters* flood to the sidelines to give the active pair the field. They must stay with the play and anticipate their involvement when the disc moves.
+
+
+```{r, horizon_setup}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(object = "Handler", label = "Thrower", x = c(10),
+  y = c(21), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Handler", label = "Reset", x = c(20),
+  y = c(23), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Handler", label = "Third", x = c(34),
+  y = c(28), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Active Cutter", label = "A", x = c(3),
+  y = c(44), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Active Cutter", label = "B", x = c(20),
+  y = c(44), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Continuation Cutter", label = "C", x = c(34), frame = 1,
+  y = c(42), show = T, alpha = 1,label_pos = "down"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1,
+  y = c(46), show = T, alpha = 1,label_pos = "up")
+)
+
+objects <- list(players,static_objects(object = "Disc",label="Disc",x = 9,y = 22.5,show = F,alpha = 1))
+
+p1 <- plot_play(pitch = pitch,object_list = objects, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Wide") +
+  theme(plot.title = element_text(size = 10))
+
+players <- list(
+  pitch_object(object = "Handler", label = "Third", x = c(3),
+  y = c(31), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Handler", label = "Reset", x = c(18.5),
+  y = c(22), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Handler", label = "Thrower", x = c(30),
+  y = c(21), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Continuation Cutter", label = "A", x = c(3),
+  y = c(42), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Continuation Cutter", label = "B", x = c(3),
+  y = c(46), show = T, alpha = 1, frame = 1, label_pos = "up"),
+  pitch_object(object = "Active Cutter", label = "C", x = c(16), frame = 1,
+  y = c(44), show = T, alpha = 1),
+  pitch_object(object = "Active Cutter", label = "D", x = c(36), frame = 1,
+  y = c(44), show = T, alpha = 1)
+)
+
+
+objects <- list(players,static_objects(object = "Disc",label="Disc",x = 29,y = 21.5,show = F,alpha = 1))
+
+p2 <- plot_play(pitch = pitch,object_list = objects, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Disc right") +
+  theme(plot.title = element_text(size = 10))
+
+players <- list(
+  pitch_object(object = "Handler", label = "Reset", x = c(15),
+  y = c(15), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Handler", label = "Thrower", x = c(18.5),
+  y = c(23), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Handler", label = "Third", x = c(34),
+  y = c(23), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Continuation Cutter", label = "A", x = c(3),
+  y = c(44), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Active Cutter", label = "B", x = c(10),
+  y = c(44), show = T, alpha = 1, frame = 1),
+  pitch_object(object = "Active Cutter", label = "C", x = c(27), frame = 1,
+  y = c(44), show = T, alpha = 1),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1,
+  y = c(44), show = T, alpha = 1)
+)
+
+
+objects <- list(players,static_objects(object = "Disc",label="Disc",x = 17.5,y = 24.5,show = F,alpha = 1))
+
+p3 <- plot_play(pitch = pitch,object_list = objects, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Middle") +
+  theme(plot.title = element_text(size = 10)) +
+  guides(colour="none")
+
+
+p1 + p3 + plot_layout(guides = "collect")
+
+```
+
+#### **Set up**
+
+- <span style="color: #6D597A;font-weight: bold">3 handlers</span>
+  - The <span style="color: #6D597A;font-weight: bold">thrower</span> in possession of the disc
+  - The <span style="color: #6D597A;font-weight: bold">reset</span> to support the thrower
+  - The <span style="color: #6D597A;font-weight: bold">third handler</span> for back up and continuation
+- <span style="color: #2F4858;font-weight: bold"> 4 cutters</span>
+  - 2 <span style="color: #33658A;font-weight: bold">active cutters</span> in front of the disc, attacking active spaces. Give the active pair roughly 2/3rds of the pitch.
+  - 2 <span style="color: #86BBD8;font-weight: bold">continuation cutters</span> flooded to the sidelines to give the active pair space to get free. They need to move and be vocal to keep their defenders busy while not interfering with active spaces. Stay with the play and anticipate becoming active when the disc moves.
+  
+The cutters are labelled **A - D** from left to right from the thrower’s perspective. If the disc is on the left side of the field, then A and B will be the active pair. If the disc is on the right, then C and D will be the active pair. If the disc is in the middle then B and C are active.
+
+#### **Initiation**
+
+The active pair need to offer complimentary cuts, while giving each other time and space to get free. We can use a call to decide which player goes **deep first**. 
+
+The other member of the pair needs to make space for this deep cut, by either:
+
+- **Delaying** their attacking cut slightly until the deep cut has gone
+- **Cutting early** to clear the throwing lane for the deep shot
+
+This will depend on their starting position and the position of the defence.
+
+```{r, initiation}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 8
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(object = "Handler", label = "Reset", x = c(15),
+  y = c(15), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Handler", label = "Thrower", x = c(18.5),
+  y = c(23), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Handler", label = "Third", x = c(34),
+  y = c(23), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Continuation Cutter", label = "A", x = c(3),
+  y = c(44), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Active Cutter", label = "B", x = c(10,8,22),
+  y = c(44,36,40), show = T, alpha = 1, frame = 1:3),
+  pitch_object(object = "Active Cutter", label = "C", x = c(27,25,25), frame = 1:3,
+  y = c(44,70,70), show = T, alpha = 1),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:3,
+  y = c(44), show = F, alpha = 1)
+)
+
+cuts <- object_paths(players,objects = c("Active Cutter"))
+arrows = list(cuts)
+
+objects <- list(players,static_objects(object = "Disc",label="Disc",x = 17.5,y = 24.5,show = F,alpha = 1,frame = 1:3))
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 1) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Initation cut - Thrower calls \"C\"", subtitle = "1. B keeps the lane open for C to go deep first") +
+  geom_text(aes(x = 18.5, y = 30, label = '\"C\"') , size = 3) +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 2) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "2. B can now slash across the lane") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+players <- list(
+  pitch_object(object = "Handler", label = "Thrower", x = c(5),
+  y = c(21), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Handler", label = "Reset", x = c(18),
+  y = c(23), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Handler", label = "Third", x = c(34),
+  y = c(28), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Active Cutter", label = "A", x = c(3,15,15),
+  y = c(44), show = T, alpha = 1, frame = 1:3),
+  pitch_object(object = "Active Cutter", label = "B", x = c(18,16,14),
+  y = c(44,50,70), show = T, alpha = 1, frame = 1:3, label_pos =  c("down","up","up")),
+  pitch_object(object = "Continuation Cutter", label = "C", x = c(34), frame = 1:3,
+  y = c(42), show = F, alpha = 1,label_pos = "down"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:3,
+  y = c(46), show = F, alpha = 1,label_pos = "up")
+)
+
+cuts <- object_paths(players,objects = c("Active Cutter"))
+arrows = list(cuts)
+
+objects <- list(players,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1,frame = 1:3))
+
+p3 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 1) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Initation cut - Thrower calls \"B\"", subtitle = "1. A clears the lane, B finds a launch point") +
+  geom_text(aes(x = 5, y = 29, label = '\"B\"') , size = 3) +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+p4 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 2) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5)  +
+  labs(subtitle = "2. B goes deep when the lane is open") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+(p1 + p2) / (p3 + p4) + plot_layout(guides = "collect")
+```
+
+It can be difficult to get free on initiation cuts as the defence usually have time to set up and communicate. Remember your cutting principles to set up a good initial attacking option:  
+
+- You don’t have to start from a static position (unless it's a stoppage). Feel free to **move your defender** around to set up an attacking cut
+- Put in a **change of direction**. Just because you are called to go deep doesn’t mean you have to cut deep straight away. Take a few hard steps under to sell your marker or set up a good launch point
+- **Cut hard**. Against good defenders you are unlikely to get free on your first cut so make the most of your ten seconds
+- **Take what the defence give you**. The deep cut is not always the preferred target. E.g. the thrower might call *A* to go deep to clear the break space for *B*.
+
+#### **Communication**
+
+Horizontal relies on everyone knowing which parts of the field we are attacking and giving players enough space. Simple, **loud** communication quickly helps everyone to understand their roles and makes a huge difference to how effective this offence is. 
+
+If it is not obvious who the active cutters are, the thrower can call *Wide* or *Middle* to indicate which cutting pair they want:
+
+  - **Middle**
+    - B + C
+  - **Wide**
+    - A + B if disc on left side
+    - C + D if disc on right side
+
+To call the initiating deep cut, you can use the player's letter (A, B, C, D) or even their name. Because defences can quickly pick up on this, you could use coded language at tournaments to make it less obvious. Here are a couple of examples:
+
+##### A - D words
+
+Instead of using A-D, use words beginning with these letters. E.g. "Antelope", "Buffalo", "Cheetah", "Dolphin". This is a bit more fun and less obvious to the defence, and you can change the word each time. 
+
+##### Home - Away
+
+Use the sidelines you have labeled home and away for the force. The active cutter closest to the home sideline can be called using a call of "home" and the defence won't know if this is the left or right side of the field.
+
+##### Body language
+
+Cutters can use body language to indicate who is going deep. For example, an active cutter can put one hand on their hip with their elbow pointing in the direction of their initiating cut.
+
+```{r, horizontal_communication}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(object = "Handler", label = "Thrower", x = c(10),
+  y = c(21), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Handler", label = "Reset", x = c(25),
+  y = c(23), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Handler", label = "Third", x = c(34),
+  y = c(28), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Active Cutter", label = "A", x = c(1,3,3),
+  y = c(44,40,70), show = T, alpha = 1, frame = 1:3),
+  pitch_object(object = "Active Cutter", label = "B", x = c(18,20,5),
+  y = c(44,40,42), show = T, alpha = 1, frame = 1:3),
+  pitch_object(object = "Continuation Cutter", label = "C", x = c(34), frame = 1:3,
+  y = c(42), show = F, alpha = 1,label_pos = "down"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:3,
+  y = c(46), show = F, alpha = 1,label_pos = "up")
+)
+
+cuts <- object_paths(players,objects = c("Active Cutter"))
+arrows = list(cuts)
+
+objects <- list(players,static_objects(object = "Disc",label="Disc",x = 11,y = 22.5,show = F,alpha = 1,frame = 1:3))
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = T,static_frame = 1) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("\"Wide Alpha\"") +
+  theme(plot.title = element_text(size = 10))
+p1
+```
+
+When setting up, the thrower may call *"Wide Alpha"* to indicate that they want A and B as the active pair, with A initiating the deep cut. Or they may call *"Middle Charlie"* to indicate that they want B and C as the active pair, with C going deep.
+
+When setting up from a turnover, it is important to get into this structure **quickly** to give time for the thrower and active cutters to identify space and make calls.
+
+#### **Rotation**
+
+When the disc moves, the active pair typically changes and players rotate through positions. New cutters become active, handlers reorganise and players push up-field on the flooded side to fill the continuation positions.
+
+A key point to the rotation is that **once you catch the disc you are no longer an active cutter**. You either stay as a handler or push through to a continuation position on the flooded side of the field. It is fine to play a few give-and-goes or quick passes while in flow, but you should not be dumping the disc and busting up-field into the spaces the new active cutters are trying to attack.
+
+**EXAMPLE 1 - Throwing to an under cut**
+
+  1. Throw goes to the active cutter coming under
+  2. The receiver now becomes a handler and we need a new active pair. The deep active cutter can stay active as they are in front of the disc and the continuation cutter closest to the disc also becomes active. The deep active cutter needs to come back under so the new active cutter goes deep.
+  3. Meanwhile, the handlers reorganise to support the disc and the third handler pushes through to become a continuation cutter.
+  
+```{r, ex1}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 8
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(object = "Handler", label = "Thrower", x = c(10,10,10,34),
+  y = c(21,21,21,49), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = "Handler", label = "Reset", x = c(23,23,23,22),
+  y = c(23,23,23,45), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = c(rep("Handler",3),"Continuation Cutter"), label = "Third", x = c(34),
+  y = c(28,28,28,62), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = c(rep("Active Cutter",3),"Handler"), label = "A", x = c(13,9,9,9),
+  y = c(60,44,44,44), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = "Active Cutter", label = "B", x = c(18,18,11,11),
+  y = c(44,70,60,60), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = c(rep("Continuation Cutter",3),"Active Cutter"), label = "C", x = c(34,34,20,20), frame = 1:4,
+  y = c(46,46,70,70), show = T, alpha = 1,label_pos = "up"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:4,
+  y = c(42,42,42,66), show = T, alpha = 1,label_pos = c("down","down","up","up"))
+)
+
+cuts <- object_paths(players,objects = c("Active Cutter","Handler","Continuation Cutter"))
+throws <- list(throw(object_list = players, label = "t1", from = "Thrower", to = "A", frame = 1,throw_frame = 2))
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:4,release_frame = 2,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5))
+)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 1) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Rotation example 1", subtitle = "1. Throw goes to A coming under") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 2) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "2. Continuation cutter C joins B as an active cutter") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+p3 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 3) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "3. The closest handler moves into the reset space") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+p4 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 4) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "4. Players rotate through flooded side and change roles") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+(p1 + p2) / (p3 + p4) + plot_layout(guides = "collect")
+```
+
+**EXAMPLE 2 - Throwing to a deep cut**
+
+  1. Throw goes to the active cutter going deep, continuation cutters anticipate the throw, stay with the play and drift slightly infield.
+  2. The receiver now becomes a handler and we need a new active pair. The active cutter who came under is now out of position to be active so floods to the far side. Both continuation cutters become active and get in front of the disc as soon as possible.
+  3. Meanwhile, the handlers reorganise to support the disc and the third handler pushes through to become a continuation cutter.
+
+```{r, ex2}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 8
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(object = "Handler", label = "Thrower", x = c(10,10,10,34),
+  y = c(21,21,21,63), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = "Handler", label = "Reset", x = c(23,23,23,25),
+  y = c(23,23,23,61), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = c(rep("Handler",3),"Continuation Cutter"), label = "Third", x = c(34),
+  y = c(28,28,28,76), show = T, alpha = 1, frame = 1:4, label_pos = c("down","down","down","up")),
+  pitch_object(object = c(rep("Active Cutter",3),"Continuation Cutter"), label = "A", x = c(11,18,18,34), y = c(42,42,42,80), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = c(rep("Active Cutter",3),"Handler"), label = "B", x = c(18,12,12,12),
+  y = c(44,60,60,60), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = c(rep("Continuation Cutter",3),"Active Cutter"), label = "C", x = c(34,30,12,12), frame = 1:4, y = c(46,50,75,75), show = T, alpha = 1,label_pos = c("up","up","down","down")),
+  pitch_object(object = c(rep("Continuation Cutter",3),"Active Cutter"), label = "D", x = c(34,30,20,20), frame = 1:4, y = c(42,46,70,70), show = T, alpha = 1,label_pos = c("down"))
+)
+
+cuts <- object_paths(players,objects = c("Active Cutter","Handler","Continuation Cutter"))
+throws <- list(throw(object_list = players, label = "t1", from = "Thrower", to = "B", frame = 1,throw_frame = 2,arrow_shape = "bhrc"))
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:4,release_frame = 2,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5))
+)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 1) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Rotation example 2", subtitle = "1. Throw goes to B going deep") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 2) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "2. Continuation cutters C and D become active cutters") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+p3 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 3) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "3. The closest handler moves into the reset space") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+p4 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 4) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "4. Players rotate through flooded side and change roles") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+
+(p1 + p2) / (p3 + p4) + plot_layout(guides = "collect")
+```
+
+**EXAMPLE 3 - Throwing a swing pass**
+
+If the thrower can't hit either of the active pair then they engage their reset for a swing or an up-the-line cut. If the disc swings, the active pair changes as the disc moves across the field. Continuation cutters need to adjust and flood.
+
+```{r, ex3}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 8
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(object = "Handler", label = "Thrower", x = c(5,5,5,5,3),
+  y = c(21,21,21,21,27), show = T, alpha = 1, frame = 1:5),
+  pitch_object(object = "Handler", label = "Reset", x = c(18.5),
+  y = c(23,21,21,21,21), show = T, alpha = 1, frame = 1:5),
+  pitch_object(object = "Handler", label = "Third", x = c(34,34,30,33,33),
+  y = c(28,28,35,25,25), show = T, alpha = 1, frame = 1:5),
+  pitch_object(object = c("Active Cutter",rep("Continuation Cutter",4)), label = "A", x = c(5,5,3,3,3), y = c(48), show = T, alpha = 1, frame = 1:5,label_pos = c("down","down","up","up","up")),
+  pitch_object(object = c(rep("Active Cutter",3),rep("Continuation Cutter",2)), label = "B", x = c(12,12,12,3,3), y = c(44,60,44,44,44), show = T, alpha = 1, frame = 1:5),
+  pitch_object(object = c(rep("Continuation Cutter",1),rep("Active Cutter",4)), label = "C", x = c(34,34,27,18,26), frame = 1:5, y = c(46,46,70,42,70), show = T, alpha = 1,label_pos = c("up","up","down","down","down")),
+  pitch_object(object = c(rep("Continuation Cutter",3),rep("Active Cutter",2)), label = "D", x = c(34,34,34,34,24), frame = 1:5, y = c(42), show = T, alpha = 1)
+)
+
+cuts <- object_paths(players,objects = c("Active Cutter","Handler","Continuation Cutter"))
+throws <- list(throw(object_list = players, label = "t1", from = "Thrower", to = "Reset", frame = 1,throw_frame = 1,arrow_shape = "fhrc"),
+               throw(object_list = players, label = "t2", from = "Reset", to = "Third", frame = 3:4,throw_frame = 4,arrow_shape = "fhrc"))
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5)),
+                  disc(throws[[2]],"d1",frame = 3:5,release_frame = 4,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5))
+)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 1) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Rotation example 3", subtitle = "1. Swing pass to reset.") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 2) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "2. A floods and C becomes active.") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+p3 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 3) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "3. The disc swings again and B floods.") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+p4 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,static_frame = 4) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "4. D becomes active") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
+  guides(colour="none",linetype="none")
+
+
+(p1 + p2) / (p3 + p4) + plot_layout(guides = "collect")
+```
+
+The way this offence flows allows players to cycle through every position and develop their all round game. It also makes you less predictable to mark as you could be a handler one moment then suddenly making a deep strike. However, if your team has preferred handlers then it is possible to have them mainly rotate through the handler positions.
+
+#### **Roles**
+
+##### <span style="color: #33658A;font-weight: bold">Active Cutters</span>
+
+The active pair continue to cut while the thrower has the disc. They provide two viable options to the thrower by making complimentary cuts to active spaces without cutting each other off.
+
+The default cutting pattern is the **triangle sequence** shown below. If an initiation cut is not called, assume this is the cutting pattern.
+
+- Slash to the break-side
+- Cut deep wide of the throwing lane
+- Come under on an angle
+
+
+```{r, horizontal_sequence}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(5),
+  y = c(21), show = F, alpha = 1, frame = 1:4),
+  pitch_object(label = "Reset", x = c(20),
+  y = c(23), show = F, alpha = 1, frame = 1:4),
+  pitch_object(label = "CH", x = c(35),
+  y = c(31), show = F, alpha = 1, frame = 1:4),
+  pitch_object(object = "Active Cutter", label = "A", x = c(5,15,15,5),
+  y = c(41,41,70,41), show = T, alpha = 1, frame = 1:4),
+  pitch_object(object = "Active Cutter", label = "B", x = c(15,15,5,15),
+  y = c(41,70,42,41), show = T, alpha = 1, frame = 1:4),
+  pitch_object(label = "C", x = c(35), frame = 1:4,
+  y = c(42), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(label = "D", x = c(35), frame = 1:4,
+  y = c(46), show = F, alpha = 1,label_pos = "up")
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(3),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5,1.5,-1.5,-1.5),show = F),
+                defender(players[[6]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[7]], xjust = c(-2.5), yjust = c(-1.5),show = F)
+)
+
+arrows = object_paths(players)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1,frame = 1:4))
+
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4, show_all = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8, show_all = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(title = "Default cutting sequence") +
+  theme(plot.title = element_text(size = 10))
+
+#p1
+p1 + 
+transition_states(states = factor(frame, levels = 1:4), transition_length = 0.5, state_length = 0.5, wrap=F) +
+  enter_fade()
+```
+
+This sequence is a good starting point, but not always the optimal option. Cutters need to learn to react to the defence and the position of the disc to decide on the best cuts. Stick to good cutting [principles](offence_principles.qmd) and attack the active spaces.
+
+##### <span style="color: #86BBD8;font-weight: bold">Continuation Cutters</span>
+
+Continuation cutters flood to give the active pair space to get free. However, they must keep moving, stay with the play, and anticipate becoming active. They must always look like a **legitimate** threat to keep their defenders occupied.
+
+Continuation cutters have time to read the play and set up **deep strikes** towards the endzone. This is a potent attacking move that we want to take advantage of, even if they are not an active cutter. Continuation cutters can commit hard to the first few steps of a deep strike without interfering with the active pair. They can then decide whether to continue the cut. Time your deep strikes off of catches and power-position moves. 
+
+```{r, deep strike}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(10),
+  y = c(21), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "Reset", x = c(23,9,9),
+  y = c(23,34,34), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "Third", x = c(34),
+  y = c(28), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "A", x = c(15), y = c(42), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "B", x = c(11), y = c(50,70,70), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Continuation Cutter", label = "C", x = c(34,28,34), frame = 1:3, y = c(46,60,48), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:3, y = c(42), show = F, alpha = 1)
+)
+
+cuts <- object_paths(players,objects = c("Offense","Continuation Cutter"))
+throws <- list(throw(object_list = players, label = "t1", from = "Thrower", to = "Reset", frame = 1,throw_frame = 2,arrow_shape = "bhrc"))
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:4,release_frame = 2,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5))
+)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Deep Strike", subtitle = "A. Call off the deep strike as active cutter in lane") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(10),
+  y = c(21), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "Reset", x = c(23,9,9),
+  y = c(23,34,34), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "Third", x = c(34),
+  y = c(28), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "A", x = c(18), y = c(42), show = F, alpha = 1, frame = 1:3),
+  pitch_object(label = "B", x = c(12), y = c(44), show = F, alpha = 1, frame = 1:3),
+  pitch_object(object = "Continuation Cutter", label = "C", x = c(34,34,20), frame = 1:3, y = c(46,46,70), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:3, y = c(42), show = F, alpha = 1)
+)
+
+cuts <- object_paths(players,objects = c("Offense","Continuation Cutter"))
+throws <- list(throw(object_list = players, label = "t1", from = "Thrower", to = "Reset", frame = 1,throw_frame = 2,arrow_shape = "bhrc"))
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:4,release_frame = 2,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5))
+)
+
+objects <- list(players,disc)
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "2. Commit to deep strike into open space") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+p1 + p2 + plot_layout(guides = "collect")
+```
+
+Are you free? Is the deep space free? Is the receiver looking to take on the throw? If the answer is NO then return to your flooded position. The effect is two-fold. First, a cut from this position has the element of surprise. Second, if run a few times, your defender will see you as a genuine threat and stop poaching, freeing up space for the active pair.
+
+Defenders will try to **poach** off of continuation cutters to help their teammates in the active spaces. If you are a continuation cutter and your marker decides to poach:
+
+- **Shout “POACH”**. This may be enough for them to see you as a threat and return their attention to you 
+- Go get the disc if you are unmarked. **Find a space where you are free** to be easily thrown to without blocking the throwing lane
+
+```{r, poaches}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(10),
+  y = c(21), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "Reset", x = c(23),
+  y = c(23), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "Third", x = c(34),
+  y = c(28), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "A", x = c(3), y = c(44), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "B", x = c(19), y = c(44), show = F, alpha = 1, frame = 1:2),
+  pitch_object(object = "Continuation Cutter", label = "C", x = c(34,20), frame = 1:2, y = c(46,30), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:3, y = c(42), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(3),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5,1.5),show = F),
+                defender(players[[6]], xjust = c(-12.5), yjust = c(12.5),show = T,label = "Poach"),
+                defender(players[[7]], xjust = c(-2.5), yjust = c(-1.5),show = F)
+)
+
+cuts <- object_paths(players,objects = c("Offense","Continuation Cutter"))
+arrows = list(cuts)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 9,y = 21.5,show = F,alpha = 1))
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Poaches", subtitle = "A. Deep poach, go collect the disc") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(10),
+  y = c(21), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "Reset", x = c(20),
+  y = c(20), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "Third", x = c(34),
+  y = c(28), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "A", x = c(3), y = c(44), show = F, alpha = 1, frame = 1:2),
+  pitch_object(label = "B", x = c(19), y = c(44), show = F, alpha = 1, frame = 1:2),
+  pitch_object(object = "Continuation Cutter", label = "C", x = c(34,20), frame = 1:2, y = c(46,70), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(object = "Continuation Cutter", label = "D", x = c(34), frame = 1:3, y = c(42), show = F, alpha = 1)
+)
+
+defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
+                defender(players[[2]], xjust = c(-1.5), yjust = c(1),show = F),
+                defender(players[[3]], xjust = c(-2.5), yjust = c(-1.5),show = F),
+                defender(players[[4]], xjust = c(-1.5), yjust = c(-1.5),show = F),
+                defender(players[[5]], xjust = c(-1.5), yjust = c(-1.5,1.5),show = F),
+                defender(players[[6]], xjust = c(-12.5), yjust = c(-10),show = T,label = "Poach",label_pos = "down"),
+                defender(players[[7]], xjust = c(-2.5), yjust = c(-1.5),show = F)
+)
+
+cuts <- object_paths(players,objects = c("Offense","Continuation Cutter"))
+arrows = list(cuts)
+
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 9,y = 21.5,show = F,alpha = 1))
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  labs(subtitle = "A. Under poach, strike deep") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+p1 + p2 + plot_layout(guides = "collect")
+
+```
+
+##### <span style="color: #6D597A;font-weight: bold">Handlers</span>
+
+Handlers support the thrower and provide options for [flow, resets and swings](offence_principles.qmd). 
+
+Whenever the disc moves, the handlers must move quickly to support the receiver. If an **immediate flow pass** is available then aggressively cut for it. Otherwise, identify who the new handlers are, **reposition** and get into **structure** quickly. 
+
+The closest handler to the new reset space should move into that space to support the thrower and open up the swing lane. The other handlers push to the far side of the field with one of them setting up as the third handler and the other pushing through to a continuation cutter position.
+
+Take a look at the example below
+
+  - Handler H1 hits active cutter A and looks for the give-go
+  - H1 and A make another quick pass in flow
+  - H2 is always re-positioning to be ready when flow breaks down
+  - When it does, H1 is too close to the disc so clears to the far side 
+
+
+```{r, horizontal_handlers}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(object = "Handler", label = "H1", x = c(10,10,8,8,8,34),
+  y = c(21,21,40,40,40,58), show = T, alpha = 1, frame = 1:6),
+  pitch_object(object = "Handler", label = "H2", x = c(23,23,25,25,23,23),
+  y = c(23,23,40,40,54,54), show = T, alpha = 1, frame = 1:6),
+  pitch_object(object = c(rep("Handler",3),rep("Offense",3)), label = "H3", x = c(34),
+  y = c(28,28,42,42,50,64), show = F, alpha = 1, frame = 1:6),
+  pitch_object(c("Offense", rep("Handler",5)), label = "A", x = c(13,13,13,7,7,7),
+  y = c(44,44,44,50,50,50), show = T, alpha = 1, frame = 1:6),
+  pitch_object(label = "B", x = c(18,18,18,14,9,9),
+  y = c(60,60,60,70,60,60), show = F, alpha = 1, frame = 1:6),
+  pitch_object(label = "C", x = c(34,34,34,20,16,16), frame = 1:6,
+  y = c(46,46,54,60,75,75), show = F, alpha = 1,label_pos = "up"),
+  pitch_object(label = "D", x = c(34), frame = 1:6,
+  y = c(42,42,50,50,58,68), show = F, alpha = 1,label_pos = c(rep("down",5),"up"))
+)
+
+cuts <- object_paths(players,objects = c("Offense","Handler"))
+throws <- list(throw(object_list = players, label = "t1", from = "H1", to = "A", frame = 1,throw_frame = 2),
+               throw(object_list = players, label = "t2", from = "A", to = "H1", frame = 2,throw_frame = 3),
+               throw(object_list = players, label = "t3", from = "H1", to = "A", frame = 3,throw_frame = 4))
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5)),
+            disc(throws[[2]],"d1",frame = 2:3,release_frame = 3,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5)),
+            disc(throws[[3]],"d1",frame = 4:6,release_frame = 4,
+                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5))
+)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows,  pv = ppv, default_obj_size = 4,keep_arrows = F,show_all = T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Handler rotation") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+
+#p1
+p1 + 
+  transition_states(states = factor(frame, levels = 1:6), transition_length = 1, state_length = 2, wrap=F) +
+  enter_fade()
+```
+
+It doesn't matter which handler moves into the reset space. The important thing is that they get there quickly to support the thrower and maintain good spacing. This is often, but not always the player who was previously in the reset position, as they should be central and already moving with play.
+
+#### **Summary**
+
+Horizontal offence is a flexible structure that opens up the **active spaces** on the field and allows for a lot of movement and creativity, rewarding both teams that can move the disc with quick flow and launch it deep at the right moments.
+
+- Pros:
+  - Exploits deep space. Teams with athletic cutters and good throwers will be rewarded with big yard gains
+  - Gives the thrower two up-field options at any time while still isolating those cutters in space
+  - Great rotation for player development and making the defence work harder
+- Cons:
+  - Only works well when a team has the ability to exploit deep areas of the pitch
+  - More difficult to play around the endzone when the deep space is taken away
+  - Can be easy to defend on a sideline by if a team *surrounds* the cutters. 
+
+## Side stack
+
+-Coming soon
+
+## Endzone offence
+
+## Zone offence
+
+-Coming soon
