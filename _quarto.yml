@@ -10,8 +10,6 @@ website:
     collapse: true
     pinned: true
     left:
-      - href: index.qmd
-        text: "Home"
       - text: "Offence"
         menu:
           - href: offence_principles.qmd

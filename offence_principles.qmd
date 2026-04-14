@@ -119,15 +119,13 @@ Continuation cutters and handlers should stay out of active spaces. Their job is
 
 You also need to look like a threat. If you are too static then your defender will be able to poach the active spaces. Keep moving, put in a few fake cuts, and be ready to attack if an opportunity arises.
 
-#### **Keep the active spaces clear**
+#### Keep the active spaces clear
 
 - Leave space to throw into
 - Leave space for active cutters to attack
 - Active cutters cannot hang around in attacking spaces - clear quickly!
 
-## Cutting and movement
-
-#### **Active cutters**
+## Active cutters
 
 Active cutters are the players in front of the disc trying to make big up-field gains. When you are active, you need to cut aggressively and avoid clogging the active spaces.
 
@@ -566,7 +564,7 @@ p2 + p1 + plot_layout(guides = "collect")
 
 #### Cutting sequences
 
-The cutting shapes above can be linked together in a powerful cutting **sequence**. For example, you can start with a deep cut on the break side, come under on an angle to the lane, slash to the break-side, then go deep again. We call this the **triangle sequence** and you should think of it as the default cutting sequence.
+The cutting shapes above can be linked together in a powerful **cutting sequence**. For example, you can start with a deep cut on the break side, come under on an angle to the lane, slash to the break-side, then go deep again. We call this the **triangle sequence** and you should think of it as the default cutting sequence.
 
 By linking cuts into sequences you give yourself multiple chances to get open for the thrower. Each change of direction is an opportunity to lose your defender, so turn *sharply*, *explosively* and use *misdirection* to your advantage.
 
@@ -586,9 +584,9 @@ players <- list(
   pitch_object(label = "CH", x = c(35),
   y = c(31), show = F, alpha = 0.1, frame = 1:4),
   pitch_object(label = "A", x = c(5),
-  y = c(41), show = T, alpha = 0.1, frame = 1:4),
+  y = c(41), show = F, alpha = 0.1, frame = 1:4),
   pitch_object(label = "B", x = c(15,15,5,15),
-  y = c(41,70,42,41), show = T, alpha = 1, frame = 1:4),
+  y = c(41,70,42,41), show = F, alpha = 1, frame = 1:4),
   pitch_object(label = "C", x = c(35), frame = 1:4,
   y = c(42), show = F, alpha = 0.1,label_pos = "up"),
   pitch_object(label = "D", x = c(35), frame = 1:4,
@@ -626,11 +624,11 @@ transition_states(states = factor(frame, levels = 1:4), transition_length = 0.5,
 
 Some offence structures use multiple active cutters. In this case, you also need to think about the **timing** of your cutting sequence:
 
-  - Cut in different moments and directions to create multiple options for the thrower
+  - Cut in different **moments and directions** to create multiple options for the thrower
   - Cut to **free up space** for your teammate to attack
   - **Delay** your cut or change of direction until your teammate has cleared the throwing lane and the space you want to attack
 
-In the example below, cutter **B** starts wide to create a throwing window for a slash cut from **A**. Because **A** starts in the throwing lane, **B** drifts up-field but delays the attacking cut deep until A has cleared the lane.
+In the example below, active cutter **A** starts in the throwing lane. **B** drifts up-field to create room for **A** to slash, but delays their attacking cut deep until A has cleared the lane.
 
 ```{r, active pair}
 #| echo: false
@@ -642,18 +640,18 @@ In the example below, cutter **B** starts wide to create a throwing window for a
 
 players <- list(
   pitch_object(label = "Thrower", x = c(5),
-  y = c(21), show = F, alpha = 1, frame = 1:5),
+  y = c(21), show = F, alpha = 1, frame = 1:3),
   pitch_object(label = "Reset", x = c(20),
-  y = c(23), show = F, alpha = 0.2, frame = 1:5),
+  y = c(23), show = F, alpha = 0.2, frame = 1:3),
   pitch_object(label = "CH", x = c(35),
-  y = c(31), show = F, alpha = 0.2, frame = 1:5),
-  pitch_object(label = "A", x = c(5,12,12,12,5),
-  y = c(41,39,39,60,41), show = F, alpha = 1, frame = 1:5),
-  pitch_object(label = "B", x = c(16,15,13,5,12),
-  y = c(41,48,70,41,39), show = F, alpha = 1, frame = 1:5),
-  pitch_object(label = "C", x = c(35), frame = 1:5,
+  y = c(31), show = F, alpha = 0.2, frame = 1:3),
+  pitch_object(label = "A", x = c(5,12,12),
+  y = c(41,39,39), show = T, alpha = 1, frame = 1:3),
+  pitch_object(label = "B", x = c(16,15,13),
+  y = c(41,48,70), show = T, alpha = 1, frame = 1:3),
+  pitch_object(label = "C", x = c(35), frame = 1:3,
   y = c(42), show = F, alpha = 0.2,label_pos = "up"),
-  pitch_object(label = "D", x = c(35), frame = 1:5,
+  pitch_object(label = "D", x = c(35), frame = 1:3,
   y = c(46), show = F, alpha = 0.2,label_pos = "up")
 )
 
@@ -681,18 +679,18 @@ p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = p
 
 #p1
 p1 + 
-transition_states(states = factor(frame, levels = 1:5), transition_length = 0.5, state_length = 0.5, wrap=F) +
+transition_states(states = factor(frame, levels = 1:3), transition_length = 0.5, state_length = 0.5, wrap=F) +
   enter_fade()
 ```
 
 
-The cutting shapes above are a good starting point for learning how to cut as they are often the most effective options for attacking the active spaces. However, they are not the only options and it is important to react to the spaces on the field and the positions of defenders. Be **creative** and **adapt** your cutting accordingly. 
+The cutting shapes and sequences above are a good starting point for learning how to cut as they are often the most effective options for attacking the active spaces. However, they are not the only options and it is important to react to the spaces on the field and the positions of defenders. Be **creative** and **adapt** your cutting accordingly. 
 
-Sometimes it gets messy; the defence clogs spaces; the thrower is under pressure; your teammates are running into each other; and it's impossible to find the right cut. Be **patient**, stick to good cutting principles, work hard to create space and find the best positions to launch an attacking cut.
+Sometimes it gets messy. The defence clogs spaces; the thrower is under pressure; your teammates are running into each other; and it's impossible to find the right cut. Be **patient**, keep working hard to create space and find good positions from which to launch your cuts. Eventually an attacking opportunity will open up.
 
-#### **Setting up a cut**
+## Setting up a cut
 
-Good cutting isn’t just about speed and effort, it also requires good positioning, timing and intention. The best cutters don’t just run into open space, they create that space first. This preparatory movement is what we refer to as **setting up**. 
+Good cutting isn’t just about speed and effort, it also requires good positioning and timing. The best cutters don’t just run into open space, they create that space first. This preparatory movement is what we refer to as **setting up**. 
 
 A good set up allows you to: 
 
@@ -712,13 +710,13 @@ Setting up can take many forms depending on the situation. It might be as simple
   - Use **change of speed** and **change of direction** to get separation
   - Get your defender **off balance** or committing in one direction, then attack against their momentum
 
-#### Launch your attack from a strong position:
+#### Launch your attack from a strong position
 
   - Find the right **launch point** for your attacking cut e.g
     - Going deep: Shallow and wide of the lane
     - Coming under: Deep and wide of the lane
     - Slash: Open side and wide of the lane
-  - Find <span style="color: #d63c3c;">apex points:</span> Positions with multiple attacking options that are difficult for your defender to cover e.g
+  - Find <span style="color: #d63c3c;">apex points:</span> Positions with multiple attacking options that force your defender into a decision e.g
     - A deep strike or a big gain under
     - An open under or a big break side window
     - Attacking the swing lane or a handler strike up the line
@@ -777,7 +775,7 @@ p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = p
 p1
 ```
 
-#### Launch your attack at the right time: 
+#### Launch your attack at the right time
 
 Timing your attacking cut is crucial for getting open and maximising the space to throw into. Use these cues to time your cut:
 
@@ -795,10 +793,10 @@ Timing your attacking cut is crucial for getting open and maximising the space t
   
 #### Keep the active spaces clear 
 
-  - Active cutters
+  - **Active cutters**
     - Use a quick set up to get free or create a better cutting angle
     - Don’t clog the active space with small movements or by being indecisive about your cut. If you are in the active space, you need to be attacking it or clearing out*
-  - Continuation cutters
+  - **Continuation cutters**
     - Set up a cut without interfering with active cutters/spaces
     - Pull out of an attacking cut early if it’s not a good option 
   
@@ -1013,7 +1011,7 @@ The swing lane allows us to shift the point of attack if we can move the disc la
 #| message: false
 #| warning: false
 #| fig-height: 4
-#| fig-width: 7
+#| fig-width: 5
 #| fig-dpi: 600
 
 players <- list(
@@ -1067,11 +1065,11 @@ p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv =
 p1
 ```
 
-## Continuation and flow
+## Continuation and Flow
 
 Continuation and flow are the principles that keep our offence moving without letting the defence settle.
 
-**Continuation** is the act of immediately following up a completed pass with another well-timed throw, taking advantage of the space and momentum just created,
+**Continuation** is the act of immediately following up a completed pass with another well-timed throw, taking advantage of the space and momentum just created.
 
 **Flow** is the overall movement of the disc and players in a connected, rhythmic way that maintains offensive momentum, opens up new angles, and keeps the defence on its toes.
   
@@ -1111,7 +1109,7 @@ The reset handler supports the thrower by supplying a backup option when there a
 
 Good reset moves create great continuation options. Our reset is not just a safe option to reduce the stall count or get the disc off of the sideline. We want our reset start new attacks and generate offensive flow.
 
-##### **Engage the reset early**
+##### Engage the reset early
 
 Don’t let the defence settle in one position for too long. If there are no good up-field options, engage your reset and move the disc. It is important to engage your reset early in the stall count to give time for them to cut or clear for another option.
 
@@ -1119,7 +1117,7 @@ Don’t let the defence settle in one position for too long. If there are no goo
   - By stall 2: On or near a sideline
   - Immediately: If there are no up-field options developing
 
-#### **The reset space**
+#### The reset space
 
 Early in the stall, the reset's job is to get into a good position, anticipate play and prepare to become active when they are engaged by the thrower.
 
@@ -1177,7 +1175,7 @@ base <- list(
   geom_text(aes(x=18.725, y=20, label="Reset space"), color="#2F4858", size=3)
 )
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base=base) +
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base=base) +
   guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
@@ -1196,9 +1194,9 @@ players <- list(
   pitch_object(label = "CH", x = c(35),
   y = c(31), show = F, alpha = 0.2, frame = 1:3),
   pitch_object(label = "A", x = c(16),
-  y = c(45,60,60), show = F, alpha = 0.2, frame = 1:3),
+  y = c(45,50,50), show = F, alpha = 0.2, frame = 1:3),
   pitch_object(label = "B", x = c(5,12,12),
-  y = c(55,55,51), show = F, alpha = 0.2, frame = 1:3),
+  y = c(50), show = F, alpha = 0.2, frame = 1:3),
   pitch_object(label = "C", x = c(35), frame = 1:3,
   y = c(42), show = F, alpha = 0.2,label_pos = "up"),
   pitch_object(label = "D", x = c(35), frame = 1:3,
@@ -1227,7 +1225,7 @@ base <- list(
   geom_rect(aes(xmin=3, xmax=25, ymin=15, ymax=42), fill="#2F4858", alpha=0.3)
 )
 
-p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base=base) +
+p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base=base) +
   guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
@@ -1241,11 +1239,11 @@ p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = p
 p1 + p2 + plot_layout(guides = "collect")
 ```
 
-#### **Reset positioning and movement**
+#### Reset positioning and movement
 
 The reset should position themselves to provide good angles to attack the swing lane and the throwing lane while keeping up-field options clear for the thrower. You may need to adapt your position based on how the defence set up, but the two positions below are the most common and effective for engaging the reset.
 
-##### CENTRAL CHANNEL
+**CENTRAL CHANNEL**
 
 When the disc is in the centre of the field, the reset should position themselves around **45 degrees** behind the thrower, on the open side.
 
@@ -1443,7 +1441,7 @@ p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv =
   geom_vline(xintercept = c(12,25), linetype = "dashed", color = "grey20", alpha = 0.5) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
-  labs(title = "3: Handler Give-and-Go", subtitle =  "Thrower dishes to a poached reset then immediately cuts") +
+  labs(title = "C: Handler Give-and-Go", subtitle =  "Thrower dishes to a poached reset then immediately cuts") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
 #p3
@@ -1463,9 +1461,9 @@ These moves lead to good attacking positions and continuation options:
 
 If you commit to a cut and don't get the disc, clear the reset space. Avoid *dancing* in the reset space and trying to get free with multiple small movements. It is better to clear this space for other options.
 
-##### OUTER CHANNELS
+**OUTER CHANNELS**
 
-When the disc is on or near the sideline, the reset should position themselves towards the **centre** of the field, starting **slightly up-field** of the disc to open up the swing lane.
+When the disc is towards a sideline, the reset should position themselves in the **centre** of the field, starting **slightly up-field** of the disc to open up the swing lane.
 
 The distance you set up from the disc is important. You need to be far enough away that you have room to get free on an attacking cut, but also close enough to the disc that a quick swing pass is a viable option.
 
@@ -1548,7 +1546,7 @@ players <- list(
   pitch_object(label = "A", x = c(10,15,15,15),
   y = c(42), show = F, alpha = 0.2, frame = 1:4),
   pitch_object(label = "B", x = c(18),
-  y = c(50,50,50,55), show = F, alpha = c(0.2), frame = 1:4),
+  y = c(45,45,45,50), show = F, alpha = c(0.2), frame = 1:4),
   pitch_object(label = "C", x = c(34), frame = 1:4,
   y = c(46), show = F, alpha = 0.2,label_pos = "up"),
   pitch_object(label = "D", x = c(34), frame = 1:4,
@@ -1595,11 +1593,10 @@ These moves lead to good attacking positions and continuation options:
     - Swing lane continuation
   - **B. Attack up-field**
     - Power-position continuation
-    - Otherwise, hit the swing pass
-  
-If an early swing pass is not available then drive up-field to get the disc in power position. If you still don't get the disc, clear the reset space for another player.
 
-#### **Reset communication**
+If an early swing pass is not available then drive up-field to get the disc in power position. If you still don't get the disc, **clear** the reset space for another player.
+
+#### Reset communication
 
 Reset moves can be time pressured with limited space to work with. It is important that the thrower and receiver communicate. Make eye contact, or physically turn towards your reset handler to engage them in play. You can use non-verbal cues to communicate your options.
 
@@ -1610,7 +1607,7 @@ Reset moves can be time pressured with limited space to work with. It is importa
 
 Most offence structures have a third handler. The role of the third handler is very similar to a continuation cutter, except that they are providing support for the reset. 
 
-They should be ready to fill into the reset space if the original reset clears out and offer good continuation cuts around the swing lane. Positioning and cutting options vary depending on the offence structure but the principles remain the same: 
+They should be ready to push into the reset space if the original reset clears out and to offer good continuation cuts around the swing lane. Positioning and cutting options vary depending on the offence structure but the principles remain the same: 
 
   - Give the reset time and space to get free
   - Anticipate play and set up your attacking moves
@@ -1640,8 +1637,8 @@ The third handler anticipates the swing, drifts up-field and attacks a large swi
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-height: 4
-#| fig-width: 8
+#| fig-height: 6
+#| fig-width: 7
 #| fig-dpi: 600
 
 players <- list(
@@ -1735,7 +1732,7 @@ p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv =
 ```
 
 
-**EXAMPLE A**
+**EXAMPLE B**
 
 The third handler anticipates the swing, drifts up-field and attacks a large swing space on a good angle for continuation. Cutters that find themselves in-front of the receiver need to clear the new throwing lane.
 
@@ -1744,7 +1741,7 @@ The third handler anticipates the swing, drifts up-field and attacks a large swi
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-height: 8
+#| fig-height: 6
 #| fig-width: 7
 #| fig-dpi: 600
 
@@ -1844,11 +1841,11 @@ If you can't continue the swing, try to **avoid getting stuck in the centre of t
   
 The examples above show two-pass swing moves. It is also fine to swing the disc with one pass if there is space to do so, the receiver is open and the pass is low risk.
 
-## Initiation
+## Initiating on offence
 
-Initiation is the first few passes of an offensive possession. It is important to get off to a good start and set up the offence for success.
+Below are a few good tips for getting the disc moving at the start of an offensive possession. The first pass is often the toughest. Our primary goal is to get the disc moving, preferably into an attacking area. 
 
-#### **From the pull**
+#### From the pull
 
 After catching the pull, we want to take any opportunity to move the disc forwards and away from the sideline. We will use three handlers to make the most of the first few passes.
 
@@ -1929,10 +1926,10 @@ Cutters should delay running a pull play until the thrower is ready to engage wi
 
 #### From a static disc or stoppage
 
-The first pass in an offensive possession is often the hardest to make, especially if cutters are not in motion and the defence is set.
+The first pass in an offensive possession is often the hardest to make, especially if cutters are static and the defence is set.
 
   - Look to hit **active spaces** first
-  - If it isn't a stoppage, run a few **stall 0 cuts**
+  - Run **stall 0 cuts** (if it isn't a stoppage)
     - Start actively cutting before the stall starts
     - This can shift the defence and flush out poaches 
   - **Take any open pass**, even a short gain to get the disc moving
@@ -1943,16 +1940,15 @@ The first pass in an offensive possession is often the hardest to make, especial
 
 From a turnover we look to either play fast or slow, nothing in between.
 
-  - **Slow:**
-    - Thrower walks to the disc
-    - Everyone else moves quickly into offense structure
-    - Give the thrower time to assess options and call a play 
-  - **Fast**
+  - **Fast:**
     - Closest to the disc picks it up*
-      - *Unless you are the deepest player and there is no one in support (in this case move upfield)
+      - *Unless you are the deepest player and there is no one in support (in this case move up-field)
     - Up-field players provide **immediate options**
       - If that’s a strike to the endzone, great!
       - Otherwise, anything that gets the disc and defence on the move 
     - If an immediate up-field option is not available, **move the disc sideways** into space
       - Often defences will crowd the space in front of the disc to stifle a fast break
-
+- **Slow:**
+    - Thrower walks to the disc
+    - Everyone else moves quickly into offense structure
+    - Give the thrower time to assess options and call a play 

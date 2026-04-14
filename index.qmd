@@ -1,6 +1,14 @@
 ---
-title: "Hillhead Ultimate Playbook"
+title: "HILLHEAD ULTIMATE PLAYBOOK"
 ---
+
+---------------
+
+::: {.full-width}
+![](images/team.jpeg)
+:::
+
+---------------
 
 This playbook is a collection of strategies and best practices for Hillhead Ultimate players. 
 
