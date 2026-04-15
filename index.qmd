@@ -1,20 +1,16 @@
 ---
-title: "HILLHEAD ULTIMATE PLAYBOOK"
+title: "Hillhead Ultimate Playbook"
 ---
-
----------------
-
-::: {.full-width}
-![](images/team.jpeg)
-:::
-
----------------
 
 This playbook is a collection of strategies and best practices for Hillhead Ultimate players. 
 
 It covers many of the **principles** we use to guide our play, as well as some of the **structures** and **plays** we use in training and in games. 
 
 We encourage you to read through, ask questions, learn the language and use it at training! 
+
+::: {.full-width}
+![](images/team.jpeg)
+:::
 
 ---------------
 

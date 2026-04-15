@@ -1010,8 +1010,8 @@ The swing lane allows us to shift the point of attack if we can move the disc la
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-height: 4
-#| fig-width: 5
+#| fig-height: 2
+#| fig-width: 3.5
 #| fig-dpi: 600
 
 players <- list(
@@ -1717,7 +1717,7 @@ p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv =
 
 base <- list(
   geom_vline(aes(xintercept = c(24)), colour="#D15609", linetype="dashed"),
-  geom_text(aes(x=24,y=50,label="Throwing lane"), colour="#D15609", angle = 90, vjust = -0.5, size = 3)
+  geom_text(aes(x=24,y=10,label="Throwing lane"), colour="#D15609", angle = 90, vjust = -0.5, size = 3)
 )
 
 p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 4, base = base) +
@@ -1788,7 +1788,7 @@ objects <- list(players,defense, disc)
 
 base <- list(
   geom_hline(aes(yintercept = c(21,5)), colour="#DB127A", linetype="dashed"),
-  geom_text(aes(x=33,y=21,label="Swing lane"), colour="#DB127A", vjust = 1.5, size = 3)
+  geom_text(aes(x=33,y=19,label="Swing lane"), colour="#DB127A", vjust = 1.5, size = 3)
 )
 
 p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 1,base = base) +
@@ -1821,7 +1821,7 @@ p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv =
 
 base <- list(
   geom_vline(aes(xintercept = c(18.5,30)), colour="#D15609", linetype="dashed"),
-  geom_text(aes(x=24,y=50,label="Throwing lane"), colour="#D15609", angle = 90, vjust = -0.5, size = 3)
+  geom_text(aes(x=30,y=30,label="Throwing lane"), colour="#D15609", angle = 90, vjust = 1.5, size = 3)
 )
 
 p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 4, base = base) +
