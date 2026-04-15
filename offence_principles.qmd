@@ -1010,8 +1010,8 @@ The swing lane allows us to shift the point of attack if we can move the disc la
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-height: 2
-#| fig-width: 3.5
+#| fig-height: 4
+#| fig-width: 7
 #| fig-dpi: 600
 
 players <- list(
@@ -1052,11 +1052,11 @@ disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
 objects <- list(players,defense, disc)
 
 base <- list(
-  geom_hline(aes(yintercept = c(23,5)), colour="#DB127A", linetype="dashed"),
-  geom_text(aes(x=33,y=21,label="Swing lane"), colour="#DB127A", vjust = 1.5, size = 3)
+  geom_hline(aes(yintercept = c(23,5)), colour="#DB127A", linetype="dashed", alpha = 0.5),
+  geom_text(aes(x=33,y=21,label="Swing lane"), colour="#DB127A", vjust = 1.5, size = 3, alpha = 0.8)
 )
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 1,base = base) +
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = F,static_frame = 1,base = base) +
   guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
   theme_void() +
   coord_fixed(ratio = 0.5) +
@@ -1717,7 +1717,7 @@ p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv =
 
 base <- list(
   geom_vline(aes(xintercept = c(24)), colour="#D15609", linetype="dashed"),
-  geom_text(aes(x=24,y=10,label="Throwing lane"), colour="#D15609", angle = 90, vjust = -0.5, size = 3)
+  geom_text(aes(x=24,y=12,label="Throwing lane"), colour="#D15609", angle = 90, vjust = -0.5, size = 3)
 )
 
 p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 4, base = base) +
@@ -1788,7 +1788,7 @@ objects <- list(players,defense, disc)
 
 base <- list(
   geom_hline(aes(yintercept = c(21,5)), colour="#DB127A", linetype="dashed"),
-  geom_text(aes(x=33,y=19,label="Swing lane"), colour="#DB127A", vjust = 1.5, size = 3)
+  geom_text(aes(x=33,y=5,label="Swing lane"), colour="#DB127A", vjust = -0.5, size = 3)
 )
 
 p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 1,base = base) +
