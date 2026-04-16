@@ -806,6 +806,8 @@ Timing your attacking cut is crucial for getting open and maximising the space t
 
 The attacking nature of our offence is built into the system and the active spaces we use on the field. Our cutters are responsible for creating these spaces through disciplined cutting, spacing and timing. This reduces pressure on throwers to take risks or force the disc through small windows. While there is room for creativity, there is no need to be risky or overly-aggressive. Instead, the focus is on accuracy, timing, and leading receivers into good continuation options.
 
+Throws should go into space, rather than directly at the receiver. This allows the receiver to run onto the disc at speed and also reduces the margin of error on a throw. It is much easier for a cutter to adjust their feet than to change the path of a disc mid-flight!
+
 Here are some key pointers for throwing to our preferred cutting shapes:
 
 #### Throwing to deep cuts
@@ -1002,9 +1004,10 @@ p1
 
 The swing lane allows us to shift the point of attack if we can move the disc laterally across the pitch. As much as possible, we want to lead the receiver into the swing lane to create better angles for continuation passes.
 
-- Throw with *shape* to keep the disc away from defenders
-- Lead the receiver into the space away from their defender
-- Try to gain yards where possible
+- Throw with **shape** to keep the disc away from defenders
+- **Lead** the receiver into the space away from their defender
+- Try to **gain yards** where possible
+  - Or lead the thrower into a continuation pass that gains yards
 
 ```{r, swing_throw}
 #| echo: false
@@ -1078,11 +1081,10 @@ When a pass is made, try to keep the disc moving quickly and safely to maintain 
   - **Catch and move into a throwing motion**
     - Ready to hit a quick continuation pass if it’s on
     - OR: Throw a believable fake to shift the defence and open up another space to attack
-  - **Hit the first open pass**
+  - **Take the first open option**
+    - You might not get a better option
     - Keep the disc moving and the offence flowing
-    - Don't look off an open throw just because it's not the most exciting option
-      - You might not get a better option
-      - Move the disc and encourage better cutting options in future
+    - Don't rush into a pass. Open, means you are ready to throw!
     - Don’t wait for cuts to appear if nothing is happening up-field
       - Engage your reset
   - **Hit the pass in front of you**
@@ -1113,9 +1115,9 @@ Good reset moves create great continuation options. Our reset is not just a safe
 
 Don’t let the defence settle in one position for too long. If there are no good up-field options, engage your reset and move the disc. It is important to engage your reset early in the stall count to give time for them to cut or clear for another option.
 
-  - By stall 4: In the centre of the field
-  - By stall 2: On or near a sideline
   - Immediately: If there are no up-field options developing
+  - By stall 2: On or near a sideline
+  - By stall 4: In the centre of the field
 
 #### The reset space
 
@@ -1213,7 +1215,7 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
 )
 
 throws <- list(
-  throw(players,"B",from = "H1", to = "Reset",show=T,frame = 1:2,throw_frame = 3, label_pos = "end_down"),
+  throw(players,"B",from = "H1", to = "Reset",show=T,frame = 1:2,throw_frame = 3, label_pos = "end_up"),
   throw(players,"A",from = "H1", to = "Reset",show=T, arrow_shape = "fhrc", frame = 1:2,throw_frame = 1, label_pos = "end_up")
 )
 cuts <- object_paths(players)
@@ -1929,13 +1931,13 @@ Cutters should delay running a pull play until the thrower is ready to engage wi
 The first pass in an offensive possession is often the hardest to make, especially if cutters are static and the defence is set.
 
   - Look to hit **active spaces** first
-  - Run **stall 0 cuts** (if it isn't a stoppage)
-    - Start actively cutting before the stall starts
-    - This can shift the defence and flush out poaches 
   - **Take any open pass**, even a short gain to get the disc moving
   - **Engage your reset** early
     - Move the disc around the defence into open space
-
+  - If the defence are poaching and clogging space then try to **clear poaches** or move the disc around them
+    - Cut early to flush the poaches out
+    - Swing the disc to bigger spaces
+    
 #### From a turnover
 
 From a turnover we look to either play fast or slow, nothing in between.

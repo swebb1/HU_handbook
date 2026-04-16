@@ -19,7 +19,7 @@ ppal <- c(Cutter = "#2F4858", `Active Cutter` = "#33658A", `Continuation Cutter`
 
 pitch <- ggpitch(type = "full", endzone_fill = hu_pal[3],colour = hu_pal[5])
 
-pitch_a <- ggpitch(type = "half_attack", endzone_fill = hu_pal[3],colour = hu_pal[5])
+pitch_a <- ggpitch(type = "half_attack", endzone_fill = hu_pal[3], colour = hu_pal[5], ymin = 64)
 
 pitch_d <- ggpitch(type = "half_defend", ymax = 50, endzone_fill = hu_pal[3],colour = hu_pal[5])
 
@@ -47,14 +47,14 @@ ppv$obj_sizes["Handler"] <- 3
 ppv$obj_sizes["Reset"] <- 3
 ppv$obj_sizes["Continuation Handler"] <- 3
 
-ppv$obj_sizes["Offense"] <- 3.5
-ppv$obj_sizes["Defense"] <- 3.5
-ppv$obj_sizes["Cutter"] <- 3.5
-ppv$obj_sizes["Active Cutter"] <- 3.5
-ppv$obj_sizes["Continuation Cutter"] <- 3.5
-ppv$obj_sizes["Handler"] <- 3.5
-ppv$obj_sizes["Reset"] <- 3.5
-ppv$obj_sizes["Continuation Handler"] <- 3.5
+ppv2$obj_sizes["Offense"] <- 3.5
+ppv2$obj_sizes["Defense"] <- 3.5
+ppv2$obj_sizes["Cutter"] <- 3.5
+ppv2$obj_sizes["Active Cutter"] <- 3.5
+ppv2$obj_sizes["Continuation Cutter"] <- 3.5
+ppv2$obj_sizes["Handler"] <- 3.5
+ppv2$obj_sizes["Reset"] <- 3.5
+ppv2$obj_sizes["Continuation Handler"] <- 3.5
 
 
 
@@ -893,7 +893,146 @@ Horizontal offence is a flexible structure that opens up the **active spaces** o
 
 -Coming soon
 
-## Endzone offence
+## Isolation Endzone
+
+As we approach the endzone, the field gets more congested and the active spaces get smaller. This makes it harder to execute our default cutting patterns and we need to transition to a different structure.
+
+We want to do this in a way that is seamless and doesn't disrupt our flow as we attack the endzone. We should stay in our default offence as long as there is still room for two active cutters to operate in front of the disc. As a rule of thumb, this is usually ~10m from the endzone line.
+
+#### Isolate and attack
+
+When we get close to the endzone, we want to:
+
+  - **Choose a side** to attack and move the disc towards that side
+  - **Isolate 3 players**: The thrower, reset and a single active cutter trying to score
+  - **Flood** all inactive players to the far side of the endzone
+  
+The three isolated players have a lot of space to work with and can use quick flow and creative cutting to score. 
+
+- The reset is immediately active and can attack up the line to score
+- The active cutter can come out of the endzone to fill in as reset
+- Give-go moves work well in small spaces
+
+Inactive players give the isolated players space. If you see an easy opportunity to cut and score then you do have license to break from the flood. However, we want to be disciplined with this and only go if it is wide open. Similar to a continuation cutters deep strike, you can call this off before interfering with the isolated players.
+
+The third handler should position themselves for a continuation swing pass.
+
+```{r, isolation}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 8
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(32),
+  y = c(78), show = T, alpha = 0.9, frame = 1:3),
+  pitch_object(label = "Reset", x = c(22,29,33),
+  y = c(79,79,92), show = T, alpha = 0.9, frame = 1:3),
+  pitch_object(label = "Third", x = c(8),
+  y = c(84), show = T, alpha = 0.3, frame = 1:3),
+  pitch_object(label = "Active", x = c(22,30,22), y = c(96,89,82), show = F, alpha = 0.9, frame = 1:3),
+  pitch_object(label = "B", x = c(3), y = c(88), show = F, alpha = 0.3, frame = 1:3),
+  pitch_object(label = "C", x = c(3), frame = 1:3, y = c(92), show = F, alpha = 0.3),
+  pitch_object(label = "D", x = c(3), frame = 1:3, y = c(96), show = F, alpha = 0.3)
+)
+
+cuts <- object_paths(players)
+arrows = list(cuts)
+
+disc <- static_objects(object = "Disc",label="Disc",x = 32.5,y = 78.5,show = F,alpha = 1,frame = 1:3)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch_a,object_list = objects, arrow_list = arrows, pv = ppv, default_obj_size = 4,keep_arrows = T,static_frame = 1) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Isolation endzone", subtitle = "Attack a side") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+p1
+
+```
+
+#### Transition on a swing
+
+If the disc moves to the middle of the field, look to continue the swing to the third handler on the flooded side of the field.
+
+When the disc moves to the flooded side, everyone except the thrower, reset and back of the flooded stack move to the centre of the endzone to set up a vertical stack. 
+
+The player at the back of the flooded stack looks to score, then clears into the stack. From this point, we are in a standard vertical stack endzone offence as described below.
+
+```{r, transition}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 8
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "Thrower", x = c(32,32,32,18.5),
+  y = c(78,78,78,82), show = F, alpha = c(0.9,0.9,0.3,0.3), frame = 1:4),
+  pitch_object(label = "Reset", x = c(22,22,22,18),
+  y = c(79), show = F, alpha = 0.9, frame = 1:4),
+  pitch_object(label = "Third", x = c(8,13,6,6),
+  y = c(84,84,79,79), show = F, alpha = c(0.3,0.9,0.9,0.9), frame = 1:4),
+  pitch_object(label = "Active", x = c(22,30,30,18.5), y = c(96,90,90,90), show = F, alpha = c(0.9,0.3,0.3,0.3), frame = 1:4),
+  pitch_object(label = "B", x = c(4,4,4,18.5), y = c(88), show = F, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "C", x = c(4,4,4,18.5), frame = 1:4, y = c(92), show = F, alpha = 0.3),
+  pitch_object(label = "D", x = c(4,4,4,3), frame = 1:4, y = c(96,96,96,88), show = F, alpha = c(0.3,0.3,0.9,0.9))
+)
+
+cuts <- object_paths(players)
+
+throws <- list(
+  throw(object_list = players, label = "t1", from = "Thrower", to = "Reset", frame = 1,throw_frame = 1),
+  throw(object_list = players, label = "t2", from = "Reset", to = "Third", frame = 2,throw_frame = 3),
+  throw(object_list = players, label = "t3", from = "Third", to = "D", frame = 3,throw_frame = 4,arrow_shape = "bhrc")
+)
+
+arrows = list(cuts,throws)
+
+disc <- list(
+  disc(throws[[1]],"d1",frame = 1,release_frame = 2,
+       yjust = c(0.5,0.5),xjust = c(-0.5,-0.5)),
+  disc(throws[[2]],"d1",frame = 2,release_frame = 3,
+       yjust = c(0.5,0.5),xjust = c(-0.5,-0.5)),
+  disc(throws[[3]],"d1",frame = 3:4,release_frame = 4,
+       yjust = c(0.5,0.5),xjust = c(-0.5,-0.5))
+)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch_a,object_list = objects, arrow_list = arrows, pv = ppv, default_obj_size = 4,show_all=T) +
+  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Isolation endzone", subtitle = "Swing transition") +
+  theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
+p1
+
+p1 + 
+  transition_states(states = factor(frame, levels = 1:4), transition_length = 0.5, state_length = 0.5, wrap=F) +
+  enter_fade()
+
+```
+
+We don't want to get stuck in the centre of the field. If you can't swing the disc to the flooded side, look to **bounce** it back to the original side and attack the open space again.
+
+## Vertical Endzone
+
+Vertical endzone offence is a common structure for attacking the endzone which creates spaces on both sides of the pitch. We either tranisition into vertical (as described above) or start in vertical from a stoppage in play.
+
+In vertical offence we have the following positions:
+
+- Two handlers
+  - Thrower and reset
+- Two active cutters
+  - Isolated at the front or just outside the endzone
+- Three flooded cutters
+  - Push towards the back of the endzone
 
 ## Zone offence
 
