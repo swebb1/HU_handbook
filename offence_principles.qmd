@@ -12,7 +12,7 @@ library(tidyverse)
 library(patchwork)
 library(gganimate)
 
-hu_pal <- c("#134072", "#036d3f", "#edb945", "#d63c3c", "#6d6e6d")
+hu_pal <- c("#134072","#036d3f", "#edb945", "#d63c3c", "#6d6e6d","#dB4C77")
 spal <- c(bs="#008293",tl="#D15609",sw="#DB127A",de="#464FB1")
 
 pitch <- ggpitch(type = "full", endzone_fill = hu_pal[3],colour = hu_pal[5])
@@ -21,16 +21,16 @@ pitch_a <- ggpitch(type = "half_attack", endzone_fill = hu_pal[3],colour = hu_pa
 
 pitch_d <- ggpitch(type = "half_defend", ymax = 50, endzone_fill = hu_pal[3],colour = hu_pal[5])
 
-ggulti_plot_values$obj_cols["Offense"] <- hu_pal[1]
-ggulti_plot_values$obj_cols["Defense"] <- hu_pal[2]
-ggulti_plot_values$obj_sizes["Disc"] <- 3
-
-ppv2 <- ggulti_plot_values
-
-ggulti_plot_values$obj_sizes["Offense"] <- 3.5
-ggulti_plot_values$obj_sizes["Defense"] <- 3.5
-
 ppv <- ggulti_plot_values
+
+ppv$arrow_params$arrow_width = 0.8
+
+ppv$obj_cols["Offense"] <- hu_pal[1]
+ppv$obj_cols["Defense"] <- hu_pal[6]
+ppv$obj_sizes["Disc"] <- 3
+
+ppv$obj_sizes["Offense"] <- 3
+ppv$obj_sizes["Defense"] <- 3
 
 ```
 
@@ -85,7 +85,7 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),alpha = 1,
 
 arrows = ggulti::object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
 
 base <- list(
   geom_rect(aes(xmin=8, xmax=20, ymin=28, ymax=48), fill="#008293", alpha=0.4),
@@ -98,8 +98,7 @@ base <- list(
   geom_text(aes(x=15, y=87, label="Deep Space"), color="#464FB1", size=3)
 )
 
-plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T, base = base) +
   theme_void() +
   coord_fixed(ratio = 0.5)
 
@@ -178,14 +177,13 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
-  coord_fixed(ratio = 0.5) + 
+  coord_fixed(ratio = 0.75) + 
   ggtitle("Break side") +
   theme(plot.title = element_text(size = 10))
 
@@ -220,14 +218,13 @@ defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F)
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 24.5,show = F,alpha = 1))
 
-p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "Central") +
   theme(plot.title = element_text(size = 10))
 
@@ -285,11 +282,10 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
 
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
@@ -327,11 +323,9 @@ defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F)
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 24.5,show = F,alpha = 1))
 
-
-p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
@@ -396,10 +390,9 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T, base = base) +
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
@@ -442,10 +435,9 @@ defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F)
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 24.5,show = F,alpha = 1))
 
-p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T, base = base) +
   geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
@@ -502,12 +494,11 @@ defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F)
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 24.5,show = F,alpha = 1))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T, base = base) +
   geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
-  geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+  geom_text(aes(x=12, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
   labs(title = "Big window") +
@@ -547,12 +538,11 @@ defense <- list(defender(players[[1]], xjust = c(-0.5), yjust = c(2.5),show = F)
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 24.5,show = F,alpha = 1))
 
-p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
-  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
-  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
+p2 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T, base = base) +
+  geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
+  geom_text(aes(x=12, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
   labs(title = "Small window") +
@@ -604,10 +594,9 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1,frame = 1:4))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4, show_all = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv, show_all = T) +
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8, show_all = T) +
   theme_void() +
@@ -616,6 +605,7 @@ p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = p
   theme(plot.title = element_text(size = 10))
 
 #p1
+
 p1 + 
 transition_states(states = factor(frame, levels = 1:4), transition_length = 0.5, state_length = 0.5, wrap=F) +
   enter_fade()
@@ -666,10 +656,9 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1,frame = 1:3))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4, show_all = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv, show_all = T) +
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
@@ -716,7 +705,7 @@ Setting up can take many forms depending on the situation. It might be as simple
     - Going deep: Shallow and wide of the lane
     - Coming under: Deep and wide of the lane
     - Slash: Open side and wide of the lane
-  - Find <span style="color: #d63c3c;">apex points:</span> Positions with multiple attacking options that force your defender into a decision e.g
+  - Find <span style="color: #036d3f;font-weight: bold;">apex points:</span> Positions with multiple attacking options that force your defender into a decision e.g
     - A deep strike or a big gain under
     - An open under or a big break side window
     - Attacking the swing lane or a handler strike up the line
@@ -757,16 +746,15 @@ defense <- list(defender(players[[1]], xjust = c(1.5), yjust = c(2.5),show = F),
 
 arrows = object_paths(players)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 9,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 9,y = 22.5,show = F,alpha = 1))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
-  geom_curve(aes(x=5, y=41, xend=3, yend=33), color="#d63c3c", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
-    geom_curve(aes(x=5, y=41, xend=10, yend=41), color="#d63c3c", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
-    geom_curve(aes(x=15, y=46, xend=15, yend=60), color="#d63c3c", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
-    geom_curve(aes(x=15, y=46, xend=10, yend=38), color="#d63c3c", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
-    geom_curve(aes(x=15, y=24, xend=10, yend=31), color="#d63c3c", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
-    geom_curve(aes(x=15, y=24, xend=18, yend=21), color="#d63c3c", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
+  geom_curve(aes(x=5, y=41, xend=3, yend=33), color="#036d3f", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
+    geom_curve(aes(x=5, y=41, xend=10, yend=41), color="#036d3f", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
+    geom_curve(aes(x=15, y=46, xend=15, yend=60), color="#036d3f", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
+    geom_curve(aes(x=15, y=46, xend=10, yend=38), color="#036d3f", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
+    geom_curve(aes(x=15, y=24, xend=10, yend=31), color="#036d3f", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
+    geom_curve(aes(x=15, y=24, xend=18, yend=21), color="#036d3f", linewidth=0.8, arrow=arrow(length=unit(0.2,"cm")),curvature=0) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
   ggtitle("Apex points") +
@@ -779,15 +767,15 @@ p1
 
 Timing your attacking cut is crucial for getting open and maximising the space to throw into. Use these cues to time your cut:
 
-  - As a receiver **catches** the disc
+  - **As a receiver catches the disc**
     - Be the immediate continuation option for a thrower. Time your cut to be open and attacking space as the receiver is ready to throw:
       - Going too early shrinks the throwing window and makes the throw more difficult or less advantageous
       - Going too late stifles flow as there is no immediate option for quick continuation, allowing the defence to recover
-  - As a thrower **fakes**
+  - **As a thrower fakes**
     - If you aren't in a position for immediate continuation, try to set yourself up for the thrower’s second look. 
     - Anticipate the thrower faking to an active cut and looking for the next option
     - Good fakes can cause defenders to over-commit and open up new spaces to attack
-  - As an active cutter **clears**
+  - **As an active cutter clears**
     - Ensures the active space is free to attack
     - Gives an immediate backup option for the thrower 
   
@@ -855,10 +843,12 @@ throws <- throw(players,"t1",from = "H1", to = "B",arrow_shape = "bhrc",show=F,f
 cuts <- object_paths(players)
 arrows = list(cuts,throws)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+ppv$arrow_params$resect = 1
+
+
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   theme_void() +
   coord_fixed(ratio = 0.5) + 
@@ -866,6 +856,8 @@ p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = p
   theme(plot.title = element_text(size = 10))
 
 p1
+
+ppv$arrow_params$resect <- ggulti_plot_values$arrow_params$resect
 ```
 
 #### Throwing to under cuts
@@ -910,10 +902,9 @@ throws <- throw(players,"t1",from = "H1", to = "B",show=F,frame = 1:2,throw_fram
 cuts <- object_paths(players)
 arrows = list(cuts,throws)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 21.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
@@ -989,15 +980,20 @@ arrows = list(cuts,throws)
 
 objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 17.5,y = 23.5,show = F,alpha = 1))
 
-p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+ppv$arrow_params$resect = 1
+
+p1 <- plot_play(pitch = pitch,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = c(12,22), linetype = "dashed", color = "#D15609", alpha = 0.5) +
   geom_text(aes(x=22, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
   labs(title = "Slash cut to break-side") +
   theme(plot.title = element_text(size = 10))
+
 p1
+
+ppv$arrow_params$resect <- ggulti_plot_values$arrow_params$resect
+
 ```
 
 #### Throwing to the swing lane
@@ -1050,7 +1046,7 @@ cuts <- object_paths(players)
 arrows = list(cuts,throws)
 
 disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
-                  yjust = c(-0.5,0.5),xjust = c(0.5,0.5)))
+                  yjust = c(-1,1),xjust = c(0.5,0.5)))
 
 objects <- list(players,defense, disc)
 
@@ -1059,13 +1055,17 @@ base <- list(
   geom_text(aes(x=33,y=21,label="Swing lane"), colour="#DB127A", vjust = 1.5, size = 3, alpha = 0.8)
 )
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = F,static_frame = 1,base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+ppv$arrow_params$resect = 1
+
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 1,base = base) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "Swing pass") +
   theme(plot.title = element_text(size = 10))
 p1
+
+ppv$arrow_params$resect <- ggulti_plot_values$arrow_params$resect
+
 ```
 
 ## Continuation and Flow
@@ -1170,19 +1170,18 @@ throws <- list(
 cuts <- object_paths(players)
 arrows = list(cuts,throws)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22,show = F,alpha = 1))
 
 base <- list(
   geom_rect(aes(xmin=12.5, xmax=25, ymin=15, ymax=25), fill="#2F4858", alpha=0.3),
-  geom_text(aes(x=18.725, y=20, label="Reset space"), color="#2F4858", size=3)
+  geom_text(aes(x=18.725, y=20, label="Reset space"), color="#2F4858", size=3),
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5),
+  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8),
+  geom_hline(yintercept = 22, linetype = "dashed", color = "#DB127A", alpha = 0.5),
+  geom_text(aes(x=32, y=22, label="Swing Lane"), color="#DB127A", size=2.5, vjust = 1.5, alpha = 0.8)
 )
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base=base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
-  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
-  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
-  geom_hline(yintercept = 22, linetype = "dashed", color = "#DB127A", alpha = 0.5) +
-  geom_text(aes(x=32, y=22, label="Swing Lane"), color="#DB127A", size=2.5, vjust = 1.5, alpha = 0.8) +
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T, base=base) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
   labs(title = "Reset setting up") +
@@ -1221,18 +1220,17 @@ throws <- list(
 cuts <- object_paths(players)
 arrows = list(cuts,throws)
 
-objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22.5,show = F,alpha = 1))
+objects <- list(players,defense,static_objects(object = "Disc",label="Disc",x = 4,y = 22,show = F,alpha = 1))
 
 base <- list(
-  geom_rect(aes(xmin=3, xmax=25, ymin=15, ymax=42), fill="#2F4858", alpha=0.3)
+  geom_rect(aes(xmin=3, xmax=25, ymin=15, ymax=42), fill="#2F4858", alpha=0.3),
+  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5),
+  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8),
+  geom_hline(yintercept = 22, linetype = "dashed", color = "#DB127A", alpha = 0.5),
+  geom_text(aes(x=32, y=22, label="Swing Lane"), color="#DB127A", size=2.5, vjust = 1.5, alpha = 0.8)
 )
 
-p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,default_obj_size = 4,keep_arrows = T, base=base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
-  geom_vline(xintercept = 10, linetype = "dashed", color = "#D15609", alpha = 0.5) +
-  geom_text(aes(x=10, y=70, label="Throwing Lane"), color="#D15609", size=2.5, angle = 90, vjust = 1.5, alpha = 0.8) +
-  geom_hline(yintercept = 22, linetype = "dashed", color = "#DB127A", alpha = 0.5) +
-  geom_text(aes(x=32, y=22, label="Swing Lane"), color="#DB127A", size=2.5, vjust = 1.5, alpha = 0.8) +
+p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T, base=base) +
   theme_void() +
   coord_fixed(ratio = 0.5) +
   labs(title = "Reset active") +
@@ -1308,11 +1306,10 @@ base <- list(
   geom_rect(aes(xmin=22, xmax=30, ymin=35, ymax=45), fill="#008293", alpha=0.3)
 )
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = T,base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T,base = base) +
   geom_vline(xintercept = c(12,25), linetype = "dashed", color = "grey20", alpha = 0.5) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "A: Plinko cut", subtitle = "Followed by break-side continuation") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
@@ -1364,18 +1361,17 @@ cuts <- object_paths(players)
 arrows = list(cuts,throws)
 
 disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
-                  yjust = c(0.5,0.5),xjust = c(-0.5,-0.5)),
+                  yjust = c(-0.5,0.5),xjust = c(-0.5,-0.5)),
               disc(throws[[2]],"d1",frame = 3,release_frame = 3, 
                    yjust = c(0.5,0), xjust = c(-0.5,-0.5))
 )
 
 objects <- list(players,defense, disc)
 
-p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   geom_vline(xintercept = c(12,25), linetype = "dashed", color = "grey20", alpha = 0.5) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "B: Attack up-field", subtitle = "Lead the reset into power-position") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
@@ -1433,16 +1429,15 @@ disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
               disc(throws[[2]],"d1",frame = 3,release_frame = 3, 
                    yjust = c(0.5,0), xjust = c(0,-0.5)),
               disc(throws[[3]],"d1",frame = 4,release_frame = 4, 
-                   yjust = c(0.5,0), xjust = c(-0.5,-0.5))
+                   yjust = c(0.5,0), xjust = c(-0,-0.5))
 )
 
 objects <- list(players,defense, disc)
 
-p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,show_all = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,show_all = T) +
   geom_vline(xintercept = c(12,25), linetype = "dashed", color = "grey20", alpha = 0.5) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "C: Handler Give-and-Go", subtitle =  "Thrower dishes to a poached reset then immediately cuts") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
@@ -1520,10 +1515,9 @@ disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
 
 objects <- list(players,defense, disc)
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "A: Swing pass", subtitle = "Lead into swing lane continuation") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
@@ -1572,17 +1566,16 @@ cuts <- object_paths(players)
 arrows = list(cuts,throws)
 
 disc <- list(disc(throws[[1]],"d1",frame = 1:3,release_frame = 3,
-                  yjust = c(-0.5,0.5),xjust = c(0.5,0.5)),
+                  yjust = c(0.5,0),xjust = c(-0.5,-0.5)),
               disc(throws[[2]],"d1",frame = 4,release_frame = 4, 
                    yjust = c(0.5,0), xjust = c(0.5,0.5))
 )
 
 objects <- list(players,defense,disc)
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = T) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = T) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "B: Attack up-field", subtitle = "Lead the reset into power-position") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
@@ -1639,7 +1632,7 @@ The third handler anticipates the swing, drifts up-field and attacks a large swi
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-height: 6
+#| fig-height: 8
 #| fig-width: 7
 #| fig-dpi: 600
 
@@ -1679,7 +1672,7 @@ arrows = list(cuts,throws)
 disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
                   yjust = c(-0.5,0.5),xjust = c(0.5,0.5)),
               disc(throws[[2]],"d1",frame = 3:4,release_frame = 3, 
-                   yjust = c(0.5,0), xjust = c(0.5,0.5))
+                   yjust = c(0.5,0), xjust = c(0.5,-0.5))
 )
 
 objects <- list(players,defense, disc)
@@ -1689,10 +1682,9 @@ base <- list(
   geom_text(aes(x=33,y=21,label="Swing lane"), colour="#DB127A", vjust = -0.5, size = 3)
 )
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 1,base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 1,base = base) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "Swing continuation", subtitle = "1. 3rd handler anticipates swing and drifts upfield") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
@@ -1701,18 +1693,16 @@ base <- list(
   geom_segment(aes(x=18.5,xend=37,y=18,yend=26), colour="#DB127A", linetype="dashed")
 )
 
-p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 2, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 2, base = base) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(subtitle = "2. Swing lane is now angled upfield") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) + 
   guides(colour = "none",linetype="none")
 
-p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 3) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 3) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(subtitle = "3. Cutters in front of the disc clear out") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) + 
   guides(colour = "none",linetype="none")
@@ -1722,17 +1712,15 @@ base <- list(
   geom_text(aes(x=24,y=12,label="Throwing lane"), colour="#D15609", angle = 90, vjust = -0.5, size = 3)
 )
 
-p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 4, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 4, base = base) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(subtitle = "4. A new throwing lane opens up") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
   guides(colour = "none",linetype="none")
 
 (p1 + p2)  / (p3 + p4) + plot_layout(guides = "collect")
 ```
-
 
 **EXAMPLE B**
 
@@ -1743,7 +1731,7 @@ The third handler anticipates the swing, drifts up-field and attacks a large swi
 #| echo: false
 #| message: false
 #| warning: false
-#| fig-height: 6
+#| fig-height: 8
 #| fig-width: 7
 #| fig-dpi: 600
 
@@ -1793,10 +1781,9 @@ base <- list(
   geom_text(aes(x=33,y=5,label="Swing lane"), colour="#DB127A", vjust = -0.5, size = 3)
 )
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 1,base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 1,base = base) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "Swing continuation", subtitle = "1. 3rd handler is too flat for good swing continuation") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8))
 
@@ -1805,18 +1792,16 @@ base <- list(
   geom_segment(aes(x=18.5,xend=33,y=18,yend=26), colour="#DB127A", linetype="dashed")
 )
 
-p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 2, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p2 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 2, base = base) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(subtitle = "2. Up-field cutter cuts for the swing") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) + 
   guides(colour = "none",linetype="none")
 
-p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 3) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p3 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 3) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(subtitle = "3. Players around the disc clear out") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) + 
   guides(colour = "none",linetype="none")
@@ -1826,10 +1811,9 @@ base <- list(
   geom_text(aes(x=30,y=30,label="Throwing lane"), colour="#D15609", angle = 90, vjust = 1.5, size = 3)
 )
 
-p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 4, base = base) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+p4 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 4, base = base) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(subtitle = "4. A new throwing lane opens up") +
   theme(plot.title = element_text(size = 10), plot.subtitle = element_text(size = 8)) +
   guides(colour = "none",linetype="none")
@@ -1909,17 +1893,21 @@ cuts2 <- object_paths(defense,objects = c("Offense","Defense"))
 arrows = list(cuts,cuts2,throws)
 
 disc <- list(disc(throws[[1]],"d1",frame = 1:2,release_frame = 2,
-                  yjust = c(-0.5,0.5),xjust = c(0.5,0.5)))
+                  yjust = c(1,1),xjust = c(0.5,0.5)))
 
 objects <- list(players, defense,disc)
 
-p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv2,default_obj_size = 4,keep_arrows = F,static_frame = 1) +
-  guides(colour = guide_legend(override.aes = list(shape = 16, linetype = 0, size = 3))) +  
+ppv$arrow_params$resect = 1
+
+p1 <- plot_play(pitch = pitch_d,object_list = objects, arrow_list = arrows, pv = ppv,keep_arrows = F,static_frame = 1) +
   theme_void() +
-  coord_fixed(ratio = 0.5) +
+  coord_fixed(ratio = 0.75) +
   labs(title = "Fielding the pull") +
   theme(plot.title = element_text(size = 10))
 p1
+
+ppv$arrow_params$resect <- ggulti_plot_values$arrow_params$resect
+  
 ```
 
 If there is time, the handlers can advance the disc further with short passes until the defence closes in or you are in position to run your play / structure.
