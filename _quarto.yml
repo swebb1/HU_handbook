@@ -17,6 +17,8 @@ website:
             text: Principles
           - href: offence_structures.qmd
             text: Structures
+          - href: offence_plays.qmd
+            text: Plays
 format:
   html:
     theme:       

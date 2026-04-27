@@ -1,0 +1,501 @@
+---
+title: "OFFENCE PLAYS"
+---
+
+```{r,setup}
+#| echo: false
+#| message: false
+#| warning: false
+
+library(ggulti)
+library(tidyverse)
+library(patchwork)
+library(gganimate)
+library(emoGG)
+
+hu_pal <- c("#134072","#036d3f", "#edb945", "#d63c3c", "#6d6e6d","#dB4C77")
+spal <- c(bs="#008293",tl="#D15609",sw="#DB127A",de="#464FB1")
+
+pitch <- ggpitch(type = "full", endzone_fill = hu_pal[3],colour = hu_pal[5])
+
+pitch_a <- ggpitch(type = "half_attack", endzone_fill = hu_pal[3],colour = hu_pal[5])
+
+pitch_d <- ggpitch(type = "half_defend", ymax = 50, endzone_fill = hu_pal[3],colour = hu_pal[5])
+
+ppv <- ggulti_plot_values
+
+ppv$arrow_params$arrow_width = 0.8
+
+ppv$obj_cols["Offense"] <- hu_pal[1]
+ppv$obj_cols["Defense"] <- hu_pal[6]
+ppv$obj_sizes["Disc"] <- 3
+
+ppv$obj_sizes["Offense"] <- 3
+ppv$obj_sizes["Defense"] <- 3
+
+```
+
+
+Set plays are a great way to create attacking opportunities with pre-determined cuts. They work best when the offence has time to set up and communicate, so are normally called from a static disc or as a pull play.
+
+The play is just the ideal sequence. Be prepared to adapt your cuts slightly depending on how the defence set up. When you take on a pass, decide to throw because the cutter is open, not because it is part of the play.
+
+If the play doesn't come off, look for your backup options and transition into a regular playing structure.
+
+## Animal
+
+#### Communication
+
+You can use the word "animal" or any type of animal (other than "Fox") to initiate the play.
+
+#### Set up
+
+The play runs out of a vertical stack formation. The vertical stack should set up quite shallow to ensure there is room to attack deep. It is also smart to put your biggest receivers near the front to draw big defenders away from the deep space.
+
+#### Sequence
+
+  - 1 throws to 2 then drifts up-field
+  - 2 throws to 3 cutting out of the stack as 1 strikes deep on the opposite side
+  - 3 throws deep to 1
+  
+When run from a pull, it is good to have a side in mind that 3 would prefer to throw deep from. However, be prepared to switch it if the pull comes down on the opposite side.
+
+```{r, animal}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "1", x = c(10,10,10,18.5), y = c(21,30,40,90), show = T, alpha = 1, frame = 1:4),
+  pitch_object(label = "2", x = c(20), y = c(23), show = T, alpha = 1, frame = 1:4),
+  pitch_object(label = "A", x = c(18.5), y = c(39), show = F, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "3", x = c(18.5,18.5,30,30), y = c(43,43,32,32), show = T, alpha = 1, frame = 1:4,label_pos = "left"),
+  pitch_object(label = "B", x = c(18.5), y = c(47), show = F, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "C", x = c(18.5), y = c(51), show = F, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "D", x = c(18.5), y = c(55), show = F, alpha = 0.3, frame = 1:4)
+)
+
+cuts <- object_paths(players)
+
+throws <- list(throw(object_list = players, label = "t1", from = "1", to = "2", frame = 1:2,throw_frame = 1),
+                   throw(object_list = players, label = "t2", from = "2", to = "3", frame = 2:3,throw_frame = 3),
+                   throw(object_list = players, label = "t3", from = "3", to = "1", frame = 3:4,throw_frame = 4, arrow_shape = "fhrc")
+)
+
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1,release_frame = 2,
+                  yjust = c(1.5,1.5),xjust = c(1,1)),
+             disc(throws[[2]],"d1",frame = 2,release_frame = 3,
+                  yjust = c(1.5,1.5),xjust = c(1,1)),
+             disc(throws[[3]],"d1",frame = 3:4,release_frame = 4,
+                  yjust = c(1.5,1.5),xjust = c(1,1))
+)
+
+objects <- list(players,disc)
+
+ppv$arrow_params$resect = 1 
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv, default_obj_size = 4,show_all = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Animal") +
+  theme(plot.title = element_text(size = 10))
+
+p1 + transition_states(states = factor(frame, levels = 1:4), transition_length = 0.5, state_length = 0.5, wrap=F) +
+  enter_fade() 
+
+ppv$arrow_params$resect = ggulti_plot_values$arrow_params$resect
+
+```
+#### Transition
+
+Although this is a vertical stack play, we want to transition into one of our default offence structures e.g. horizontal or side-stack, whatever is called on the line.
+
+If the deep pass doesn't go:
+
+  - 1 cuts under towards the disc
+  - 2 and 3 remain as handlers
+  - The players in the stack push through to active or continuation cutting positions
+  - The front of stack becomes the third handler
+
+If 1 receives the disc deep:
+
+  - 2 and 3 remain as handlers
+  - Decide whether to transition to the default offence structure or endzone
+
+## Fox / Vixen
+
+#### Communication
+
+Fox can be called as a pull play or from a static disc. It works best when run from the central channel. It should not be called from within ~5m of the sideline as the isolated cutter needs big spaces to operate in.
+
+#### Set up
+
+The setup for Fox is as follows:
+
+- 1 isolated cutter has an entire side of the field (Fox)
+- 2 continuation cutters (Vixens) flooded to the other side
+- 2 handlers in the centre
+  - 1 thrower with the disc
+  - 1 reset ensuring their mark doesn't poach in the throwing lane
+- 2 flooded handlers on the left side of the field to draw defenders away from the Fox
+
+We normally put the fox on the thrower's forehand side. This means that the active side of the field is either an open-side forehand huck or a break-side backhand, which are usually quicker throws to release.
+
+#### Sequence
+
+The Fox is looking to get the disc on a deep strike or their first cut under.
+
+  - The Fox has time to clear the throwing lane or set up their deep strike
+  - Fox strikes deep, attacking the active side of the field (A)
+  - If the deep shot doesn't go, the Fox comes under for a big gain (B)
+
+```{r, fox}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object("H1", show=T, x=c(20),y=c(28), alpha = 0.8, frame = 1:3),
+  pitch_object("H2", show=T, x=c(20), y=c(20), alpha = 0.8, frame = 1:3),
+  pitch_object("H3", show=T, x=c(5), y=c(19), alpha = 0.5,frame = 1:3),
+  pitch_object("H4", show=T, x=c(7), y=c(18), alpha = 0.5,frame = 1:3),
+  pitch_object("F", show=T, x=c(26,17,21), y=c(42,40,75), alpha = 0.8, frame = 1:3),
+  pitch_object("V1", show=T, x=c(3), y=c(36), alpha = 0.5,frame = 1:3),
+  pitch_object("V2", show=T, x=c(3), y=c(40), alpha = 0.5,frame = 1:3,label_pos = "up")
+)
+
+## Add defence
+defenders <- list(
+ defender(players[[1]],"D1", show=F, xjust = -1.5, yjust = 1.5),
+ defender(players[[2]], "D2", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[3]], "D3", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[4]], "D4", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[5]], "D5", show=F, xjust = 1.5, yjust = -1.5),
+ defender(players[[6]], "D6", show=F, xjust = 1.5, yjust = 0),
+ defender(players[[7]], "D7", show=F, xjust = 1.5, yjust = 3)
+)
+## Join players and defenders
+player_list <- c(players,defenders)
+
+## Add throws between players
+throws <- list(
+  throw(player_list,"A",F,"H1","F",frame=1:3,throw_frame = 3,arrow_shape = "fhrc", label_pos = "end_up")
+)
+
+## Create arrow list
+arrows = list(
+  object_paths(player_list), ## Add arrows in front of running players
+  throws
+)
+
+## Add a disc
+disc_list = list(
+  disc(throws[[1]],"D1",F,frame = 1:3,release_frame = 3,xjust = c(1,1),yjust = c(1,-1))
+)
+
+## Combine players and disc
+objects <- c(player_list,disc_list)
+
+ppv$arrow_params$resect = 1 
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("A: Fox deep") +
+  theme(plot.title = element_text(size = 10)) +
+  geom_emoji(aes(x = 26, y = 42), emoji = "1f98a") +
+  geom_label(aes(x = 27, y = 57), label = "B", size = 3, colour = hu_pal[1], fill = "transparent")
+
+players <- list(
+  pitch_object("H1", show=T, x=c(20),y=c(28), alpha = 0.8, frame = 1:4),
+  pitch_object("H2", show=T, x=c(20), y=c(20), alpha = 0.8, frame = 1:4),
+  pitch_object("H3", show=T, x=c(5), y=c(19), alpha = 0.5,frame = 1:4),
+  pitch_object("H4", show=T, x=c(7), y=c(18), alpha = 0.5,frame = 1:4),
+  pitch_object("F", show=T, x=c(26,17,21,26), y=c(42,40,75,55), alpha = 0.8, frame = 1:4),
+  pitch_object("V1", show=T, x=c(3), y=c(36), alpha = 0.5,frame = 1:4),
+  pitch_object("V2", show=T, x=c(3), y=c(40), alpha = 0.5,frame = 1:4,label_pos = "up")
+)
+
+## Add defence
+defenders <- list(
+ defender(players[[1]],"D1", show=F, xjust = -1.5, yjust = 1.5),
+ defender(players[[2]], "D2", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[3]], "D3", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[4]], "D4", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[5]], "D5", show=F, xjust = 1.5, yjust = -1.5),
+ defender(players[[6]], "D6", show=F, xjust = 1.5, yjust = 0),
+ defender(players[[7]], "D7", show=F, xjust = 1.5, yjust = 3)
+)
+## Join players and defenders
+player_list <- c(players,defenders)
+
+## Add throws between players
+throws <- list(
+  throw(player_list,"B",F,"H1","F",frame=4,throw_frame = 4,arrow_shape = "fhrc")
+)
+
+## Create arrow list
+arrows = list(
+  object_paths(player_list), ## Add arrows in front of running players
+  throws
+)
+
+## Add a disc
+disc_list = list(
+  disc(throws[[1]],"D1",F,frame = 1:4,release_frame = 4,xjust = c(1,1),yjust = c(1,-1))
+)
+
+## Combine players and disc
+objects <- c(player_list,disc_list)
+
+ppv$arrow_params$resect = 1 
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("B: Fox under") +
+  theme(plot.title = element_text(size = 10)) +
+  geom_emoji(aes(x = 26, y = 42), emoji = "1f98a") +
+  geom_label(aes(x = 27, y = 57), label = "B", size = 3, colour = hu_pal[1], fill = "transparent")
+
+p2
+
+p1 + p2 + plot_layout(guides = "collect")
+
+ppv$arrow_params$resect = ggulti_plot_values$arrow_params$resect
+
+```
+
+
+#### Variations
+
+The defence will often try to counter the deep throw to the Fox by adding a poaching defender in the deep space. This should leave one of the Vixens unmarked. A call of "Vixen" in the Fox set up initiates the following sequence.
+
+  - 1. Fox cuts deep
+  - 2. One of the Vixens* cuts across into the space vacated by the Fox
+    - *Whoever is poached/most free
+
+```{r, vixen}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object("H1", show=T, x=c(20),y=c(28), alpha = 0.8, frame = 1:3),
+  pitch_object("H2", show=T, x=c(20), y=c(20), alpha = c(0.5), frame = 1:3),
+  pitch_object("H3", show=T, x=c(5), y=c(19), alpha = 0.5,frame = 1:3),
+  pitch_object("H4", show=T, x=c(7), y=c(18), alpha = 0.5,frame = 1:3),
+  pitch_object("F", show=T, x=c(18), y=c(42,68,68), alpha = 0.8, frame = 1:3),
+  pitch_object("V1", show=T, x=c(2), y=c(36,36,50), alpha = 0.5,frame = 1:3),
+  pitch_object("V2", show=T, x=c(3,10,28), y=c(40,50,40), alpha = 0.8,frame = 1:3,label_pos = "up")
+)
+
+## Add defence
+defenders <- list(
+ defender(players[[1]],"D1", show=F, xjust = -1.5, yjust = 1.5),
+ defender(players[[2]], "D2", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[3]], "D3", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[4]], "D4", show=F, xjust = 1.5, yjust = 1.5),
+ defender(players[[5]], "D5", show=F, xjust = 1.5, yjust = -1.5),
+ defender(players[[6]], "D6", show=F, xjust = 1.5, yjust = 0),
+ defender(players[[7]], "D7", show=F, xjust = 1.5, yjust = 3)
+)
+## Join players and defenders
+player_list <- c(players,defenders)
+
+## Add throws between players
+throws <- list(
+  throw(player_list,"A",F,"H1","V2",frame=1:3,throw_frame = 3,arrow_shape = "fhrc")
+)
+
+## Create arrow list
+arrows = list(
+  object_paths(player_list), ## Add arrows in front of running players
+  throws
+)
+
+## Add a disc
+disc_list = list(
+  disc(throws[[1]],"D1",F,frame = 1:3,release_frame = 3,xjust = c(1,1),yjust = c(1,-1))
+)
+
+## Combine players and disc
+objects <- c(player_list,disc_list)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Vixen") +
+  theme(plot.title = element_text(size = 10)) +
+  geom_emoji(aes(x = 18, y = 42), emoji = "1f98a")
+
+p1
+
+
+```
+
+
+**Vixen** can also be called as a pull play and initiated immediately. This works really well when the defence start to recognise the Fox play.
+
+#### Transition
+
+The Fox setup transitions easily into horizontal or side-stack. Once an up-field pass is made, the other players should transition into the default offence structure.
+
+It is okay for the active handlers to make a couple of passes to get the disc in a better position to hit the Fox. However, if we can't hit the Fox on their first few cuts then we want to transition to a default structure. A call of "Vixen" mid-play initiates the transition by activating the continuation cutters.
+
+## Sweep
+
+#### Communication
+
+Sweep can be called on the line as a pull play or from a static disc. The sweeping cutter can be called using the lettering system A, B, C, D for our cutters e.g "Sweep A".
+
+#### Set up
+
+Sweep is run from a conventional horizontal stack with 4 cutters spread evenly across the field. It can be called from anywhere on the field.
+
+#### Sequence
+
+  - Non-sweep cutters clear deep
+  - Sweep cutter cuts across the field into the space vacated by the active cutters
+
+The sweep cutter is normally one of the wide players (A or B). However, when the disc is on the sideline, it is often better to call one of the central cutters (B or C) as they don't have as far to go to get across the field.
+
+The clearing cutters should clear deep and away from the new throwing lane.
+
+```{r, sweep}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "H1", x = c(15), y = c(15), show = T, alpha = 0.3, frame = 1:3),
+  pitch_object(label = "H2", x = c(18.5), y = c(23), show = T, alpha = 1, frame = 1:3),
+  pitch_object(label = "H3", x = c(34), y = c(23), show = T, alpha = 0.3, frame = 1:3),
+  pitch_object(label = "A", x = c(3), y = c(38,70,70), show = T, alpha = 0.3, frame = 1:3,label_pos = "left"),
+  pitch_object(label = "B", x = c(13,18,18), y = c(38,70,70), show = T, alpha = 0.3, frame = 1:3,label_pos = "left"),
+  pitch_object(label = "C", x = c(23), y = c(38,70,70), show = T, alpha = 0.3, frame = 1:3,label_pos = "left"),
+  pitch_object(label = "D", x = c(33,30,10), y = c(38,36,36), show = T, alpha = 1, frame = 1:3,label_pos = "left")
+)
+
+cuts <- object_paths(players)
+
+throws <- list(throw(object_list = players, label = "t1", from = "H2", to = "D", frame = 2:3,throw_frame = 3,arrow_shape = "bhrc")
+)
+
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:3,release_frame = 3,
+                  yjust = c(1.5,1.5),xjust = c(-1,-1))
+)
+
+objects <- list(players,disc)
+
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Sweep D") +
+  theme(plot.title = element_text(size = 10))
+
+players <- list(
+  pitch_object(label = "H1", x = c(1), y = c(21), show = T, alpha = 1, frame = 1:4),
+  pitch_object(label = "H2", x = c(17), y = c(23), show = T, alpha = 0.3, frame = 1:3),
+  pitch_object(label = "H3", x = c(32), y = c(30), show = T, alpha = 0.3, frame = 1:3),
+  pitch_object(label = "A", x = c(3,16,16), y = c(38,70,70), show = T, alpha = 0.3, frame = 1:3,label_pos = "left"),
+  pitch_object(label = "B", x = c(13,18,18), y = c(38,70,70), show = T, alpha = 0.3, frame = 1:3,label_pos = "left"),
+  pitch_object(label = "C", x = c(23,23,3), y = c(38,34,34), show = T, alpha = 1, frame = 1:3,label_pos = "left"),
+  pitch_object(label = "D", x = c(33), y = c(38), show = T, alpha = 0.3, frame = 1:3,label_pos = "left")
+)
+
+cuts <- object_paths(players)
+
+throws <- list(throw(object_list = players, label = "t1", from = "H1", to = "C", frame = 2:3,throw_frame = 3,arrow_shape = "bhrc")
+)
+
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:4,release_frame = 3,
+                  yjust = c(1.5,1.5),xjust = c(-1,-1))
+)
+
+objects <- list(players,disc)
+
+p2 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Sweep C") +
+  theme(plot.title = element_text(size = 10)) +
+  guides(colour = "none", linetype = "none")
+
+p1 + p2 + plot_layout(guides = "collect")
+
+```
+
+#### Variations
+
+**Sweep2** is a variation of Sweep that initially looks very similar to a conventional Sweep. This can only be run from the centre of the field.
+
+  - Non-sweep cutters clear deep
+  - Sweep cutter cuts into the middle of the field, then back towards the space where they started from
+
+```{r, sweep2}
+#| echo: false
+#| message: false
+#| warning: false
+#| fig-height: 4
+#| fig-width: 7
+#| fig-dpi: 600
+
+players <- list(
+  pitch_object(label = "H1", x = c(15), y = c(15), show = T, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "H2", x = c(18.5), y = c(23), show = T, alpha = 1, frame = 1:4),
+  pitch_object(label = "H3", x = c(34), y = c(23), show = T, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "A", x = c(3,3,18.5,10), y = c(38,38,35,42), show = T, alpha = 1, frame = 1:4),
+  pitch_object(label = "B", x = c(13,18,18,18), y = c(38,70,70,70), show = T, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "C", x = c(23), y = c(38,70,70,70), show = T, alpha = 0.3, frame = 1:4),
+  pitch_object(label = "D", x = c(33), y = c(38,70,70,70), show = T, alpha = 0.3, frame = 1:4)
+)
+
+cuts <- object_paths(players)
+
+throws <- list(throw(object_list = players, label = "t1", from = "H2", to = "A", frame = 3:4,throw_frame = 4,arrow_shape = "bhrc")
+)
+
+arrows = list(cuts,throws)
+
+disc <- list(disc(throws[[1]],"d1",frame = 1:4,release_frame = 4,
+                  yjust = c(1.5,1.5),xjust = c(-1,-1))
+)
+
+objects <- list(players,disc)
+
+p1 <- plot_play(pitch = pitch,object_list = objects,arrow_list = arrows, pv = ppv, default_obj_size = 4,keep_arrows = T) +
+  theme_void() +
+  coord_fixed(ratio = 0.5) +
+  ggtitle("Sweep2 A") +
+  theme(plot.title = element_text(size = 10))
+
+p1
+```
+
+It is good to run this when the defence start to recognise the Sweep play.
+
+#### Transition
+
+The Sweep setup runs from a horizontal stack, so it makes sense to stay in this structure. One of the deep cutters should provide an immediate under cut when the sweep cutter receives the disc.
+
+

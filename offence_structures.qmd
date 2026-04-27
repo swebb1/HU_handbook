@@ -1,5 +1,5 @@
 ---
-title: "Offence Structures"
+title: "OFFENCE STRUCTURES"
 ---
 
 ```{r,setup}
